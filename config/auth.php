@@ -75,6 +75,7 @@ return [
         //     'table' => 'users',
         // ],
     ],
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -99,4 +100,22 @@ return [
         ],
     ],
 
+
+    //put in for passport - bpratt 20171007
+    'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+        'api' => [
+            'driver' => 'passport',
+            'provider' => 'users',
+        ],
+    ],
+
+    'api' => [
+        'driver' => 'passport',
+        'provider' => 'users',
+    ],
+        
 ];

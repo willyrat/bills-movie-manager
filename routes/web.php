@@ -12,5 +12,24 @@
 */
 
 Route::get('/', function () {
+
+    try 
+    {
+        DB::connection()->getPdo();
+        if(DB::connection()->getDatabaseName())
+        {
+            echo "Yes! Successfully connected to the DB: " . DB::connection()->getDatabaseName();
+        }
+    } 
+    catch (\Exception $e) 
+    {
+        die("Could not connect to the database.  Please check your configuration.");
+    }
+
     return view('welcome');
 });
+
+
+// Route::get('/login', [] function () {
+//     return view('welcome');
+// });
