@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-
+//use Log;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,16 +13,46 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('/user', function (Request $request) 
+{
+    //Log::info('in middleware auth:api');
     return $request->user();
 });
 
 
+// Route::get('/user', function(Request $request) {
+//     return $request->user();
+// })->middleware('auth:api');
+
+// Route::get('/user', function (Request $request)
+// {
+//     return $request->user();  
+// });
+
+
 
 //put in for passport - bpratt 20171007
-Route::post('login', 'API\PassportController@login');
-Route::post('register', 'API\PassportController@register');
+//Route::post('login', 'API\PassportController@login');
+//Route::post('register', 'API\PassportController@register');
+
+
+
 Route::group(['middleware' => 'auth:api'], function()
 {
-	Route::post('get-details', 'API\PassportController@getDetails');
+    Route::post('get-details', 'API\PassportController@getDetails');
+    
+    //Route::get('movies', 'MovieController@index')->name('movies');
 });
+
+
+// Route::resource(
+//     'movies', 'MovieController',
+//     [ 'except' => ['create', 'edit'] ]
+// );
+
+
+//Route::post('userMovies', 'API\MoviesController@userMovies');
+
+
+
+

@@ -17,6 +17,69 @@ window.Vue = require('vue');
 
 Vue.component('example', require('./components/Example.vue'));
 
+Vue.component(
+    'passport-clients',
+    require('./components/passport/Clients.vue')
+);
+
+Vue.component(
+    'passport-authorized-clients',
+    require('./components/passport/AuthorizedClients.vue')
+);
+
+Vue.component(
+    'passport-personal-access-tokens',
+    require('./components/passport/PersonalAccessTokens.vue')
+);
+
 const app = new Vue({
     el: '#app'
 });
+
+
+// Vue.http.interceptors.push((request, next) => {
+//     request.headers.set('X-CSRF-TOKEN', Laravel.csrfToken);
+
+//     next();
+// });
+
+
+$('#loginForm').on('submit', function (e)
+    {
+        e.preventDefault();
+        console.log("form submitted");
+
+        $.post($(this).attr('action'), 
+                {
+                    email: $('#email').val(), 
+                    password: $('#password').val()    
+                }, 
+                function(response)
+                    {
+                        console.log(response);
+
+                        if(response.success)
+                        {
+                            location.href = "movies";
+                            // $.ajax(
+                            //     {
+                                    
+                            //         url: 'movies',
+                            //         type: 'get',
+                            //         headers: {'X-CSRF-Token': $("meta[name='csrf-token']").attr('content'),
+                            //                     'Authorization': response.success.token
+                            //                 }//,
+                            //         // success: function(response)
+                            //         // {
+                            //         //     console.log(response);
+                            //         // }
+                            //     }
+                            // )
+                        }
+
+
+
+                    }
+                )
+    });
+

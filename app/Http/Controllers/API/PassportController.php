@@ -12,6 +12,8 @@ use Log;
 class PassportController extends Controller
 {
 
+    protected $redirectTo = '/movies';
+
     public $successStatus = 200;
 
     /**
@@ -19,13 +21,45 @@ class PassportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function login(){
-        if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
+    public function login(Request $request)
+    {
+        if(Auth::attempt(['email' => request('email'), 'password' => request('password')]))
+        {
+            Log::info($request->all());
+            
             $user = Auth::user();
-            $success['token'] =  $user->createToken('MyApp')->accessToken;
+            $accessToken = $success['token'] =  $user->createToken('MyApp')->accessToken;
             return response()->json(['success' => $success], $this->successStatus);
+
+            //log::info($accessToken);
+            //response()->json(['success' => $success], $this->successStatus);
+            
+
+            // return response()->json(['success' => $success], $this->successStatus)
+            //             ->withHeaders([
+            //             'Accept' => 'application/json',
+            //             'application/json',
+            //             'Authorization' => 'Bearer '.$accessToken,
+            //         ]);
+                    //->withCallback(request('email'));
+
+
+
+            // $response = $client->request('GET', '/api/user', [
+            //     'headers' => [
+            //         'Accept' => 'application/json',
+            //         'Authorization' => 'Bearer '.$accessToken,
+            //     ],
+            // ]);
+
+            
+            //return (redirect('/movies'));
+
+            
+           
         }
-        else{
+        else
+        {
             return response()->json(['error'=>'Unauthorised'], 401);
         }
     }
@@ -39,22 +73,28 @@ class PassportController extends Controller
     {
         Log::info($request->all());
 
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required',
-            'c_password' => 'required|same:password',
-        ]);
+        $validator = Validator::make($request->all(), 
+            [
+                'firstName' => 'required',
+                'lastName' => 'required',
+                'email' => 'required|email',
+                'password' => 'required',
+                'c_password' => 'required|same:password',
+            ]);
 
-        if ($validator->fails()) {
+        if ($validator->fails()) 
+        {
             return response()->json(['error'=>$validator->errors()], 401);            
         }
 
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
+        
+        $user = User::create($input);                                   //creates user
+        
         $success['token'] =  $user->createToken('MyApp')->accessToken;
-        $success['name'] =  $user->name;
+        $success['firstName'] =  $user->firstName;
+        $success['lastName'] =  $user->lastName;
 
         return response()->json(['success'=>$success], $this->successStatus);
     }

@@ -15,9 +15,29 @@
 </template>
 
 <script>
-    export default {
-        mounted() {
+    export default 
+    {
+        mounted() 
+        {
             console.log('Component mounted.')
+
+            $.ajaxSetup({
+            headers:
+            { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+        });
+
+            $.ajax(
+            {
+            
+                url: '/api/user',
+                type: 'get',                
+                success: function(response)
+                {
+                    console.log(response.data);
+                }
+            });
+           
+ 
         }
     }
 </script>
