@@ -13,11 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) 
-{
-    //Log::info('in middleware auth:api');
-    return $request->user();
-});
 
 
 // Route::get('/user', function(Request $request) {
@@ -32,14 +27,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request)
 
 
 //put in for passport - bpratt 20171007
-//Route::post('login', 'API\PassportController@login');
-//Route::post('register', 'API\PassportController@register');
+Route::post('login', 'API\PassportController@login');
+Route::post('register', 'API\PassportController@register');
 
 
 
 Route::group(['middleware' => 'auth:api'], function()
 {
     Route::post('get-details', 'API\PassportController@getDetails');
+    Route::get('get-user-movies', 'API\MoviesAPIController@getUserMovies');
     
     //Route::get('movies', 'MovieController@index')->name('movies');
 });

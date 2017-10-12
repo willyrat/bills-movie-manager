@@ -32,9 +32,15 @@ Vue.component(
     require('./components/passport/PersonalAccessTokens.vue')
 );
 
+Vue.component('usermovies', require('./components/UserMovies.vue'));
+
+//!!!!!add components above this next line!!!!!
 const app = new Vue({
     el: '#app'
 });
+
+
+// Vue.component('user-movies', require('./components/UserMovies.vue'));
 
 
 // Vue.http.interceptors.push((request, next) => {

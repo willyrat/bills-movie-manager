@@ -12,7 +12,7 @@ use Log;
 class PassportController extends Controller
 {
 
-    protected $redirectTo = '/movies';
+    //protected $redirectTo = '/movies';
 
     public $successStatus = 200;
 
@@ -25,38 +25,11 @@ class PassportController extends Controller
     {
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')]))
         {
-            Log::info($request->all());
+            Log::info('in passport login - '.$request->all());
             
             $user = Auth::user();
             $accessToken = $success['token'] =  $user->createToken('MyApp')->accessToken;
             return response()->json(['success' => $success], $this->successStatus);
-
-            //log::info($accessToken);
-            //response()->json(['success' => $success], $this->successStatus);
-            
-
-            // return response()->json(['success' => $success], $this->successStatus)
-            //             ->withHeaders([
-            //             'Accept' => 'application/json',
-            //             'application/json',
-            //             'Authorization' => 'Bearer '.$accessToken,
-            //         ]);
-                    //->withCallback(request('email'));
-
-
-
-            // $response = $client->request('GET', '/api/user', [
-            //     'headers' => [
-            //         'Accept' => 'application/json',
-            //         'Authorization' => 'Bearer '.$accessToken,
-            //     ],
-            // ]);
-
-            
-            //return (redirect('/movies'));
-
-            
-           
         }
         else
         {

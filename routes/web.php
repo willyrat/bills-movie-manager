@@ -13,30 +13,32 @@
 */
 
 
-Route::get('/', function () {
+// Route::get('/', function () 
+// {
 
-    try 
-    {
-        DB::connection()->getPdo();
-        if(DB::connection()->getDatabaseName())
-        {
-            echo "Yes! Successfully connected to the DB: " . DB::connection()->getDatabaseName();
-        }
-    } 
-    catch (\Exception $e) 
-    {
-        die("Could not connect to the database.  Please check your configuration.");
-    }
+//     // try 
+//     // {
+//     //     DB::connection()->getPdo();
+//     //     if(DB::connection()->getDatabaseName())
+//     //     {
+//     //         echo "Yes! Successfully connected to the DB: " . DB::connection()->getDatabaseName();
+//     //     }
+//     // } 
+//     // catch (\Exception $e) 
+//     // {
+//     //     die("Could not connect to the database.  Please check your configuration.");
+//     // }
 
-    return view('welcome');
-});
+//     return view('welcome');
+// });
 
+Auth::routes();
 
-Route::get('/register', function () 
-{
-
-    return view('auth/register');
-});
+// Route::get('/register', function () 
+// {    
+    
+//     return view('auth/register');
+// });
 
 
 
@@ -60,6 +62,12 @@ Route::group(['middleware' => 'auth:api'], function()
 
 Route::get('/movies', 'MovieController@index')->name('movies');
 
-Auth::routes();
+Route::get('mypagination', 'MovieController@myPagination');
 
+
+
+Route::get('/', 'WelcomeController@welcome')->name('welcome');
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+

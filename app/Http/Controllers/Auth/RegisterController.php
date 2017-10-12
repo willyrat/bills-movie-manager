@@ -27,7 +27,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/movies';
 
     /**
      * Create a new controller instance.
@@ -46,7 +46,7 @@ class RegisterController extends Controller
      * @return \Illuminate\Contracts\Validation\Validator
      */
 
-     //!!!! this is not used 
+     
     protected function validator(array $data)
     {
         return Validator::make($data, [
