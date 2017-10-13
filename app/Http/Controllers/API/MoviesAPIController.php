@@ -213,21 +213,15 @@ public function createUserMovie(Request $request)
                 try 
                 {   
                     Log::info('now update movies in MoviesAPIController updateUserMovie - ');   
-                
-                    //only update what is being passed in
-                    $updateParams = array();    
-                    //$rating = request('rating');             
-                   
-                    strlen(request('formatId')) > 0 ? $updateParams['formatId'] = request('formatId') : $updateParams = ['formatId'=>1];
-                    strlen(request('rating')) > 0 ? $updateParams['rating'] = request('rating') : 1;
                     
-                    $updateParams['modifiedDate'] = $timestamp;
-                    $updateParams['modifiedBy'] = $user->id;
-                    Log::info($updateParams );
                     DB::table('user_movies')                
                         ->where('userId', '=', $user->id)                
                         ->where('movieId','=', request('movieId'))
-                        ->update($updateParams);
+                        ->update([  'formatId' => 1,                //TODO: need to fix this to work with table
+                                    'rating' => request('length'),                                    
+                                    'modifiedDate' => $timestamp,
+                                    'modifiedBy' => $user->id
+                                ]);
 
                 } catch(ValidationException $e)
                 {  
@@ -248,20 +242,15 @@ public function createUserMovie(Request $request)
                 {
                     Log::info('now update movies in MoviesAPIController updateUserMovie - ');
                     try 
-                    { 
-
-                    //only update what is being passed in
-                    unset($updateParams);                   
-                    strlen(request('title')) >0 ? $updateParams['title'] = request('title') : 1;
-                    strlen(request('length')) >0 ? $updateParams['length'] = request('length') : 1;
-                    strlen(request('releaseYear')) >0 ? $updateParams['year'] = request('year') : 1;
-                    
-                    $updateParams['modifiedDate'] = $timestamp;
-                    $updateParams['modifiedBy'] = $user->id;
-                    Log::info($updateParams );
+                    {
                         DB::table('movies')
                         ->where('id', request('movieId'))
-                        ->update($updateParams);
+                        ->update([  'title' => request('title'),
+                                    'length' => request('length'),
+                                    'releaseYear' => request('year'),
+                                    'modifiedDate' => $timestamp,
+                                    'modifiedBy' => $user->id
+                                ]);
                         
                     } catch(ValidationException $e)
                     {                            
