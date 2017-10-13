@@ -218,7 +218,7 @@ public function createUserMovie(Request $request)
                         ->where('userId', '=', $user->id)                
                         ->where('movieId','=', request('movieId'))
                         ->update([  'formatId' => 1,                //TODO: need to fix this to work with table
-                                    'rating' => request('length'),                                    
+                                    'rating' => request('rating'),                                    
                                     'modifiedDate' => $timestamp,
                                     'modifiedBy' => $user->id
                                 ]);
