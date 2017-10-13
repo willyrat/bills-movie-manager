@@ -44927,6 +44927,89 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     /*
@@ -44938,14 +45021,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             createForm: {
                 errors: [],
-                name: '',
-                redirect: ''
+                title: '',
+                length: '',
+                year: '',
+                rating: ''
             },
 
             editForm: {
                 errors: [],
-                name: '',
-                redirect: ''
+                title: '',
+                length: '',
+                year: '',
+                rating: ''
             }
         };
     },
@@ -44974,12 +45061,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         prepareComponent: function prepareComponent() {
             this.getUserMovies();
 
-            $('#modal-create-client').on('shown.bs.modal', function () {
-                $('#create-client-name').focus();
+            $('#modal-create-movie').on('shown.bs.modal', function () {
+                $('#create-movie-title').focus();
             });
 
-            $('#modal-edit-client').on('shown.bs.modal', function () {
-                $('#edit-client-name').focus();
+            $('#modal-edit-movie').on('shown.bs.modal', function () {
+                $('#edit-movie-title').focus();
             });
         },
 
@@ -44997,54 +45084,58 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 
         /**
-         * Show the form for creating new clients.
+         * Show the form for creating new movie.
          */
-        showCreateClientForm: function showCreateClientForm() {
-            $('#modal-create-client').modal('show');
+        showCreateMovieForm: function showCreateMovieForm() {
+            $('#modal-create-movie').modal('show');
         },
 
 
         /**
-         * Create a new OAuth client for the user.
+         * Create a new movie for the user.
          */
         store: function store() {
-            this.persistClient('post', '/oauth/clients', this.createForm, '#modal-create-client');
+            this.persistMovie('post', 'api/create-movie', this.createForm, '#modal-create-movie');
         },
 
 
         /**
-         * Edit the given client.
+         * Edit the given movie.
          */
-        edit: function edit(client) {
-            this.editForm.id = client.id;
-            this.editForm.name = client.name;
-            this.editForm.redirect = client.redirect;
+        edit: function edit(userMovie) {
+            this.editForm.movieId = userMovie.id;
+            this.editForm.title = userMovie.title;
+            this.editForm.length = userMovie.length;
+            this.editForm.year = userMovie.releaseYear;
+            this.editForm.rating = userMovie.rating;
 
-            $('#modal-edit-client').modal('show');
+            $('#modal-edit-movie').modal('show');
         },
 
 
         /**
-         * Update the client being edited.
+         * Update the movie being edited.
          */
         update: function update() {
-            this.persistClient('put', '/oauth/clients/' + this.editForm.id, this.editForm, '#modal-edit-client');
+            this.persistMovie('put', '/api/update-movie/' + this.editForm.movieId, this.editForm, '#modal-edit-movie');
         },
 
 
         /**
-         * Persist the client to storage using the given form.
+         * Persist the movie to storage using the given form.
          */
-        persistClient: function persistClient(method, uri, form, modal) {
+        persistMovie: function persistMovie(method, uri, form, modal) {
             var _this2 = this;
 
             form.errors = [];
 
             axios[method](uri, form).then(function (response) {
-                _this2.getClients();
+                _this2.getUserMovies();
 
-                form.name = '';
-                form.redirect = '';
+                form.title = '';
+                form.Length = '';
+                form.year = '';
+                form.rating = '';
                 form.errors = [];
 
                 $(modal).modal('hide');
@@ -45059,13 +45150,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 
         /**
-         * Destroy the given client.
+         * Destroy the given movie.
          */
-        destroy: function destroy(client) {
+        destroy: function destroy(userMovie) {
             var _this3 = this;
 
-            axios.delete('/oauth/clients/' + client.id).then(function (response) {
-                _this3.getClients();
+            axios.delete('/api/delete-movie/' + userMovie.id).then(function (response) {
+                _this3.getUserMovies();
             });
         }
     }
@@ -45100,7 +45191,7 @@ var render = function() {
               "a",
               {
                 staticClass: "action-link",
-                on: { click: _vm.showCreateClientForm }
+                on: { click: _vm.showCreateMovieForm }
               },
               [_vm._v("\n                    Add Movie\n                ")]
             )
@@ -45160,7 +45251,7 @@ var render = function() {
                           staticClass: "action-link",
                           on: {
                             click: function($event) {
-                              _vm.edit(_vm.client)
+                              _vm.edit(userMovie)
                             }
                           }
                         },
@@ -45179,7 +45270,7 @@ var render = function() {
                           staticClass: "action-link text-danger",
                           on: {
                             click: function($event) {
-                              _vm.destroy(_vm.client)
+                              _vm.destroy(userMovie)
                             }
                           }
                         },
@@ -45202,7 +45293,7 @@ var render = function() {
       "div",
       {
         staticClass: "modal fade",
-        attrs: { id: "modal-create-client", tabindex: "-1", role: "dialog" }
+        attrs: { id: "modal-create-movie", tabindex: "-1", role: "dialog" }
       },
       [
         _c("div", { staticClass: "modal-dialog" }, [
@@ -45237,7 +45328,7 @@ var render = function() {
                 [
                   _c("div", { staticClass: "form-group" }, [
                     _c("label", { staticClass: "col-md-3 control-label" }, [
-                      _vm._v("Name")
+                      _vm._v("Title")
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-7" }, [
@@ -45246,13 +45337,13 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.createForm.name,
-                            expression: "createForm.name"
+                            value: _vm.createForm.title,
+                            expression: "createForm.title"
                           }
                         ],
                         staticClass: "form-control",
-                        attrs: { id: "create-client-name", type: "text" },
-                        domProps: { value: _vm.createForm.name },
+                        attrs: { id: "create-movie-title", type: "text" },
+                        domProps: { value: _vm.createForm.title },
                         on: {
                           keyup: function($event) {
                             if (
@@ -45267,14 +45358,14 @@ var render = function() {
                             if ($event.target.composing) {
                               return
                             }
-                            _vm.createForm.name = $event.target.value
+                            _vm.createForm.title = $event.target.value
                           }
                         }
                       }),
                       _vm._v(" "),
                       _c("span", { staticClass: "help-block" }, [
                         _vm._v(
-                          "\n                                    Something your users will recognize and trust.\n                                "
+                          "\n                                    Full title of movie.\n                                "
                         )
                       ])
                     ])
@@ -45282,7 +45373,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
                     _c("label", { staticClass: "col-md-3 control-label" }, [
-                      _vm._v("Redirect URL")
+                      _vm._v("Length")
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-7" }, [
@@ -45291,13 +45382,13 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.createForm.redirect,
-                            expression: "createForm.redirect"
+                            value: _vm.createForm.length,
+                            expression: "createForm.length"
                           }
                         ],
                         staticClass: "form-control",
-                        attrs: { type: "text", name: "redirect" },
-                        domProps: { value: _vm.createForm.redirect },
+                        attrs: { type: "text", name: "length" },
+                        domProps: { value: _vm.createForm.length },
                         on: {
                           keyup: function($event) {
                             if (
@@ -45312,14 +45403,218 @@ var render = function() {
                             if ($event.target.composing) {
                               return
                             }
-                            _vm.createForm.redirect = $event.target.value
+                            _vm.createForm.length = $event.target.value
                           }
                         }
                       }),
                       _vm._v(" "),
                       _c("span", { staticClass: "help-block" }, [
                         _vm._v(
-                          "\n                                    Your application's authorization callback URL.\n                                "
+                          "\n                                    The length of the movie in minutes.\n                                "
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { staticClass: "col-md-3 control-label" }, [
+                      _vm._v("Year")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-7" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.createForm.year,
+                            expression: "createForm.year"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "year" },
+                        domProps: { value: _vm.createForm.year },
+                        on: {
+                          keyup: function($event) {
+                            if (
+                              !("button" in $event) &&
+                              _vm._k($event.keyCode, "enter", 13)
+                            ) {
+                              return null
+                            }
+                            _vm.store($event)
+                          },
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.createForm.year = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "help-block" }, [
+                        _vm._v(
+                          "\n                                    Year movie was released.\n                                "
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { staticClass: "col-md-3 control-label" }, [
+                      _vm._v("Rating")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-7" }, [
+                      _c("span", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.createForm.rating,
+                              expression: "createForm.rating"
+                            }
+                          ],
+                          staticClass: "radio-button",
+                          attrs: {
+                            type: "radio",
+                            id: "rating",
+                            value: "1",
+                            label: "1"
+                          },
+                          domProps: {
+                            value: 1,
+                            checked: _vm._q(_vm.createForm.rating, 1)
+                          },
+                          on: {
+                            __c: function($event) {
+                              _vm.createForm.rating = 1
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("span", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.createForm.rating,
+                              expression: "createForm.rating"
+                            }
+                          ],
+                          staticClass: "radio-button",
+                          attrs: {
+                            type: "radio",
+                            id: "rating",
+                            value: "2",
+                            label: "2"
+                          },
+                          domProps: {
+                            value: 2,
+                            checked: _vm._q(_vm.createForm.rating, 2)
+                          },
+                          on: {
+                            __c: function($event) {
+                              _vm.createForm.rating = 2
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("span", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.createForm.rating,
+                              expression: "createForm.rating"
+                            }
+                          ],
+                          staticClass: "radio-button",
+                          attrs: {
+                            type: "radio",
+                            id: "rating",
+                            value: "3",
+                            label: "3"
+                          },
+                          domProps: {
+                            value: 3,
+                            checked: _vm._q(_vm.createForm.rating, 3)
+                          },
+                          on: {
+                            __c: function($event) {
+                              _vm.createForm.rating = 3
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("span", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.createForm.rating,
+                              expression: "createForm.rating"
+                            }
+                          ],
+                          staticClass: "radio-button",
+                          attrs: {
+                            type: "radio",
+                            id: "rating",
+                            value: "4",
+                            label: "4"
+                          },
+                          domProps: {
+                            value: 4,
+                            checked: _vm._q(_vm.createForm.rating, 4)
+                          },
+                          on: {
+                            __c: function($event) {
+                              _vm.createForm.rating = 4
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("span", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.createForm.rating,
+                              expression: "createForm.rating"
+                            }
+                          ],
+                          staticClass: "radio-button",
+                          attrs: {
+                            type: "radio",
+                            id: "rating",
+                            value: "5",
+                            label: "5"
+                          },
+                          domProps: {
+                            value: 5,
+                            checked: _vm._q(_vm.createForm.rating, 5)
+                          },
+                          on: {
+                            __c: function($event) {
+                              _vm.createForm.rating = 5
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "help-block" }, [
+                        _vm._v(
+                          "\n                                    Your rating - 1=Terrible to 5=Excellent.\n                                "
                         )
                       ])
                     ])
@@ -45345,11 +45640,7 @@ var render = function() {
                   attrs: { type: "button" },
                   on: { click: _vm.store }
                 },
-                [
-                  _vm._v(
-                    "\n                        Create\n                    "
-                  )
-                ]
+                [_vm._v("\n                        Add\n                    ")]
               )
             ])
           ])
@@ -45361,7 +45652,7 @@ var render = function() {
       "div",
       {
         staticClass: "modal fade",
-        attrs: { id: "modal-edit-client", tabindex: "-1", role: "dialog" }
+        attrs: { id: "modal-edit-movie", tabindex: "-1", role: "dialog" }
       },
       [
         _c("div", { staticClass: "modal-dialog" }, [
@@ -45405,13 +45696,13 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.editForm.name,
-                            expression: "editForm.name"
+                            value: _vm.editForm.title,
+                            expression: "editForm.title"
                           }
                         ],
                         staticClass: "form-control",
-                        attrs: { id: "edit-client-name", type: "text" },
-                        domProps: { value: _vm.editForm.name },
+                        attrs: { id: "edit-movie-title", type: "text" },
+                        domProps: { value: _vm.editForm.title },
                         on: {
                           keyup: function($event) {
                             if (
@@ -45426,14 +45717,14 @@ var render = function() {
                             if ($event.target.composing) {
                               return
                             }
-                            _vm.editForm.name = $event.target.value
+                            _vm.editForm.title = $event.target.value
                           }
                         }
                       }),
                       _vm._v(" "),
                       _c("span", { staticClass: "help-block" }, [
                         _vm._v(
-                          "\n                                    Something your users will recognize and trust.\n                                "
+                          "\n                                    Full title of movie.\n                                "
                         )
                       ])
                     ])
@@ -45441,7 +45732,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
                     _c("label", { staticClass: "col-md-3 control-label" }, [
-                      _vm._v("Redirect URL")
+                      _vm._v("Length")
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-7" }, [
@@ -45450,13 +45741,13 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.editForm.redirect,
-                            expression: "editForm.redirect"
+                            value: _vm.editForm.length,
+                            expression: "editForm.length"
                           }
                         ],
                         staticClass: "form-control",
-                        attrs: { type: "text", name: "redirect" },
-                        domProps: { value: _vm.editForm.redirect },
+                        attrs: { type: "text", name: "length" },
+                        domProps: { value: _vm.editForm.length },
                         on: {
                           keyup: function($event) {
                             if (
@@ -45465,20 +45756,224 @@ var render = function() {
                             ) {
                               return null
                             }
-                            _vm.update($event)
+                            _vm.store($event)
                           },
                           input: function($event) {
                             if ($event.target.composing) {
                               return
                             }
-                            _vm.editForm.redirect = $event.target.value
+                            _vm.editForm.length = $event.target.value
                           }
                         }
                       }),
                       _vm._v(" "),
                       _c("span", { staticClass: "help-block" }, [
                         _vm._v(
-                          "\n                                    Your application's authorization callback URL.\n                                "
+                          "\n                                    The length of the movie in minutes.\n                                "
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { staticClass: "col-md-3 control-label" }, [
+                      _vm._v("Year")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-7" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.editForm.year,
+                            expression: "editForm.year"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "year" },
+                        domProps: { value: _vm.editForm.year },
+                        on: {
+                          keyup: function($event) {
+                            if (
+                              !("button" in $event) &&
+                              _vm._k($event.keyCode, "enter", 13)
+                            ) {
+                              return null
+                            }
+                            _vm.store($event)
+                          },
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.editForm.year = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "help-block" }, [
+                        _vm._v(
+                          "\n                                    Year movie was released.\n                                "
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { staticClass: "col-md-3 control-label" }, [
+                      _vm._v("Rating")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-7" }, [
+                      _c("span", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.editForm.rating,
+                              expression: "editForm.rating"
+                            }
+                          ],
+                          staticClass: "radio-button",
+                          attrs: {
+                            type: "radio",
+                            id: "edit-rating",
+                            value: "1",
+                            label: "1"
+                          },
+                          domProps: {
+                            value: 1,
+                            checked: _vm._q(_vm.editForm.rating, 1)
+                          },
+                          on: {
+                            __c: function($event) {
+                              _vm.editForm.rating = 1
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("span", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.editForm.rating,
+                              expression: "editForm.rating"
+                            }
+                          ],
+                          staticClass: "radio-button",
+                          attrs: {
+                            type: "radio",
+                            id: "edit-rating",
+                            value: "2",
+                            label: "2"
+                          },
+                          domProps: {
+                            value: 2,
+                            checked: _vm._q(_vm.editForm.rating, 2)
+                          },
+                          on: {
+                            __c: function($event) {
+                              _vm.editForm.rating = 2
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("span", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.editForm.rating,
+                              expression: "editForm.rating"
+                            }
+                          ],
+                          staticClass: "radio-button",
+                          attrs: {
+                            type: "radio",
+                            id: "edit-rating",
+                            value: "3",
+                            label: "3"
+                          },
+                          domProps: {
+                            value: 3,
+                            checked: _vm._q(_vm.editForm.rating, 3)
+                          },
+                          on: {
+                            __c: function($event) {
+                              _vm.editForm.rating = 3
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("span", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.editForm.rating,
+                              expression: "editForm.rating"
+                            }
+                          ],
+                          staticClass: "radio-button",
+                          attrs: {
+                            type: "radio",
+                            id: "edit-rating",
+                            value: "4",
+                            label: "4"
+                          },
+                          domProps: {
+                            value: 4,
+                            checked: _vm._q(_vm.editForm.rating, 4)
+                          },
+                          on: {
+                            __c: function($event) {
+                              _vm.editForm.rating = 4
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("span", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.editForm.rating,
+                              expression: "editForm.rating"
+                            }
+                          ],
+                          staticClass: "radio-button",
+                          attrs: {
+                            type: "radio",
+                            id: "edit-rating",
+                            value: "5",
+                            label: "5"
+                          },
+                          domProps: {
+                            value: 5,
+                            checked: _vm._q(_vm.editForm.rating, 5)
+                          },
+                          on: {
+                            __c: function($event) {
+                              _vm.editForm.rating = 5
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "help-block" }, [
+                        _vm._v(
+                          "\n                                    Your rating - 1=Terrible to 5=Excellent.\n                                "
                         )
                       ])
                     ])
@@ -45555,7 +46050,7 @@ var staticRenderFns = [
       ),
       _vm._v(" "),
       _c("h4", { staticClass: "modal-title" }, [
-        _vm._v("\n                        Create Client\n                    ")
+        _vm._v("\n                        Add Movie\n                    ")
       ])
     ])
   },
@@ -45587,7 +46082,7 @@ var staticRenderFns = [
       ),
       _vm._v(" "),
       _c("h4", { staticClass: "modal-title" }, [
-        _vm._v("\n                        Edit Client\n                    ")
+        _vm._v("\n                        Edit Movie\n                    ")
       ])
     ])
   },

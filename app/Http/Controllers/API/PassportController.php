@@ -44,7 +44,7 @@ class PassportController extends Controller
      */
     public function register(Request $request)
     {
-        Log::info($request->all());
+        Log::info('in passport register - '.$request->all());
 
         $validator = Validator::make($request->all(), 
             [
@@ -79,6 +79,20 @@ class PassportController extends Controller
      */
     public function getDetails()
     {
+        $user = Auth::user();
+        return response()->json(['success' => $user], $this->successStatus);
+    }
+
+
+    /**
+     * checkAuth api
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function checkAuth()
+    {        
+        Log::info('in passport checkAuth - ');
+
         $user = Auth::user();
         return response()->json(['success' => $user], $this->successStatus);
     }

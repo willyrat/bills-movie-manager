@@ -17,7 +17,7 @@
                         Your Movies
                     </span>
 
-                    <a class="action-link" @click="showCreateClientForm">
+                    <a class="action-link" @click="showCreateMovieForm">
                         Add Movie
                     </a>
                 </div>
@@ -39,11 +39,11 @@
                             <th>Rating</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         <tr v-for="userMovie in userMovies">
                             <!-- ID -->
-                            <td style="vertical-align: middle;">
+                            
+                            <td style="vertical-align: middle;" >
                                 {{ userMovie.id }}                                
                             </td>
 
@@ -67,14 +67,14 @@
 
                             <!-- Edit Button -->
                             <td style="vertical-align: middle;">
-                                <a class="action-link" @click="edit(client)">
+                                <a class="action-link" @click="edit(userMovie)">
                                     Edit
                                 </a>
                             </td>
 
                             <!-- Delete Button -->
                             <td style="vertical-align: middle;">
-                                <a class="action-link text-danger" @click="destroy(client)">
+                                <a class="action-link text-danger" @click="destroy(userMovie)">
                                     Delete
                                 </a>
                             </td>
@@ -84,15 +84,15 @@
             </div>
         </div>
 
-        <!-- Create Client Modal -->
-        <div class="modal fade" id="modal-create-client" tabindex="-1" role="dialog">
+        <!-- Create Movie Modal -->
+        <div class="modal fade" id="modal-create-movie" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button " class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 
                         <h4 class="modal-title">
-                            Create Client
+                            Add Movie
                         </h4>
                     </div>
 
@@ -108,35 +108,77 @@
                             </ul>
                         </div>
 
-                        <!-- Create Client Form -->
+                        <!-- Create Movie Form -->
                         <form class="form-horizontal" role="form">
-                            <!-- Name -->
+                            <!-- Title -->
                             <div class="form-group">
-                                <label class="col-md-3 control-label">Name</label>
+                                <label class="col-md-3 control-label">Title</label>
 
                                 <div class="col-md-7">
-                                    <input id="create-client-name" type="text" class="form-control"
-                                                                @keyup.enter="store" v-model="createForm.name">
+                                    <input id="create-movie-title" type="text" class="form-control"
+                                                                @keyup.enter="store" v-model="createForm.title">
 
                                     <span class="help-block">
-                                        Something your users will recognize and trust.
+                                        Full title of movie.
                                     </span>
                                 </div>
                             </div>
 
-                            <!-- Redirect URL -->
+                            <!-- Length -->
                             <div class="form-group">
-                                <label class="col-md-3 control-label">Redirect URL</label>
+                                <label class="col-md-3 control-label">Length</label>
 
                                 <div class="col-md-7">
-                                    <input type="text" class="form-control" name="redirect"
-                                                    @keyup.enter="store" v-model="createForm.redirect">
+                                    <input type="text" class="form-control" name="length"
+                                                    @keyup.enter="store" v-model="createForm.length">
 
                                     <span class="help-block">
-                                        Your application's authorization callback URL.
+                                        The length of the movie in minutes.
                                     </span>
                                 </div>
                             </div>
+
+                            <!-- Year -->
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Year</label>
+
+                                <div class="col-md-7">
+                                    <input type="text" class="form-control" name="year"
+                                                    @keyup.enter="store" v-model="createForm.year">
+
+                                    <span class="help-block">
+                                        Year movie was released.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Rating -->
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Rating</label>
+
+                                <div class="col-md-7">
+                                    <span>
+                                        <input type="radio" id="rating" value="1" label="1" class="radio-button" v-model="createForm.rating" v-bind:value="1">
+                                    </span>
+                                    <span>
+                                        <input type="radio" id="rating" value="2" label="2" class="radio-button" v-model="createForm.rating" v-bind:value="2">
+                                    </span>
+                                    <span>
+                                        <input type="radio" id="rating" value="3" label="3" class="radio-button" v-model="createForm.rating" v-bind:value="3">
+                                    </span>
+                                    <span>
+                                        <input type="radio" id="rating" value="4" label="4" class="radio-button" v-model="createForm.rating" v-bind:value="4">
+                                    </span>
+                                    <span>
+                                        <input type="radio" id="rating" value="5" label="5" class="radio-button" v-model="createForm.rating" v-bind:value="5">
+                                    </span>                                    
+                                   
+                                    <span class="help-block">
+                                        Your rating - 1=Terrible to 5=Excellent.
+                                    </span>
+                                </div>
+                            </div>
+
                         </form>
                     </div>
 
@@ -145,22 +187,22 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
                         <button type="button" class="btn btn-primary" @click="store">
-                            Create
+                            Add
                         </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Edit Client Modal -->
-        <div class="modal fade" id="modal-edit-client" tabindex="-1" role="dialog">
+        <!-- Edit movie Modal -->
+        <div class="modal fade" id="modal-edit-movie" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button " class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 
                         <h4 class="modal-title">
-                            Edit Client
+                            Edit Movie
                         </h4>
                     </div>
 
@@ -176,32 +218,73 @@
                             </ul>
                         </div>
 
-                        <!-- Edit Client Form -->
-                        <form class="form-horizontal" role="form">
-                            <!-- Name -->
+                        <!-- Edit Movie Form -->
+                        <form class="form-horizontal" role="form">                            
+                            <!-- Title -->
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Name</label>
 
                                 <div class="col-md-7">
-                                    <input id="edit-client-name" type="text" class="form-control"
-                                                                @keyup.enter="update" v-model="editForm.name">
+                                    <input id="edit-movie-title" type="text" class="form-control"
+                                                                @keyup.enter="update" v-model="editForm.title">
 
                                     <span class="help-block">
-                                        Something your users will recognize and trust.
+                                        Full title of movie.
                                     </span>
                                 </div>
                             </div>
 
-                            <!-- Redirect URL -->
+                            <!-- Length -->
                             <div class="form-group">
-                                <label class="col-md-3 control-label">Redirect URL</label>
+                                <label class="col-md-3 control-label">Length</label>
 
                                 <div class="col-md-7">
-                                    <input type="text" class="form-control" name="redirect"
-                                                    @keyup.enter="update" v-model="editForm.redirect">
+                                    <input type="text" class="form-control" name="length"
+                                                    @keyup.enter="store" v-model="editForm.length">
 
                                     <span class="help-block">
-                                        Your application's authorization callback URL.
+                                        The length of the movie in minutes.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Year -->
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Year</label>
+
+                                <div class="col-md-7">
+                                    <input type="text" class="form-control" name="year"
+                                                    @keyup.enter="store" v-model="editForm.year">
+
+                                    <span class="help-block">
+                                        Year movie was released.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Rating -->
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Rating</label>
+
+                                <div class="col-md-7">
+                                    <span>
+                                        <input type="radio" id="edit-rating" value="1" label="1" class="radio-button" v-model="editForm.rating" v-bind:value="1">
+                                    </span>
+                                    <span>
+                                        <input type="radio" id="edit-rating" value="2" label="2" class="radio-button" v-model="editForm.rating" v-bind:value="2">
+                                    </span>
+                                    <span>
+                                        <input type="radio" id="edit-rating" value="3" label="3" class="radio-button" v-model="editForm.rating" v-bind:value="3">
+                                    </span>
+                                    <span>
+                                        <input type="radio" id="edit-rating" value="4" label="4" class="radio-button" v-model="editForm.rating" v-bind:value="4">
+                                    </span>
+                                    <span>
+                                        <input type="radio" id="edit-rating" value="5" label="5" class="radio-button" v-model="editForm.rating" v-bind:value="5">
+                                    </span>                                    
+                                   
+                                    <span class="help-block">
+                                        Your rating - 1=Terrible to 5=Excellent.
                                     </span>
                                 </div>
                             </div>
@@ -233,14 +316,18 @@
 
                 createForm: {
                     errors: [],
-                    name: '',
-                    redirect: ''
+                    title: '',
+                    length: '',
+                    year: '',
+                    rating: ''
                 },
 
                 editForm: {
                     errors: [],
-                    name: '',
-                    redirect: ''
+                    title: '',
+                    length: '',
+                    year: '',
+                    rating: ''
                 }
             };
         },
@@ -266,12 +353,12 @@
             prepareComponent() {
                 this.getUserMovies();
 
-                $('#modal-create-client').on('shown.bs.modal', () => {
-                    $('#create-client-name').focus();
+                $('#modal-create-movie').on('shown.bs.modal', () => {
+                    $('#create-movie-title').focus();
                 });
 
-                $('#modal-edit-client').on('shown.bs.modal', () => {
-                    $('#edit-client-name').focus();
+                $('#modal-edit-movie').on('shown.bs.modal', () => {
+                    $('#edit-movie-title').focus();
                 });
             },
 
@@ -286,55 +373,62 @@
             },
 
             /**
-             * Show the form for creating new clients.
+             * Show the form for creating new movie.
              */
-            showCreateClientForm() {
-                $('#modal-create-client').modal('show');
+            showCreateMovieForm() {
+                $('#modal-create-movie').modal('show');
             },
 
             /**
-             * Create a new OAuth client for the user.
+             * Create a new movie for the user.
              */
             store() {
-                this.persistClient(
-                    'post', '/oauth/clients',
-                    this.createForm, '#modal-create-client'
+                this.persistMovie(
+                    'post', 'api/create-movie',
+                    this.createForm, '#modal-create-movie'
                 );
             },
 
-            /**
-             * Edit the given client.
-             */
-            edit(client) {
-                this.editForm.id = client.id;
-                this.editForm.name = client.name;
-                this.editForm.redirect = client.redirect;
 
-                $('#modal-edit-client').modal('show');
+
+
+            /**
+             * Edit the given movie.
+             */
+            edit(userMovie) {
+                this.editForm.movieId = userMovie.id;
+                this.editForm.title = userMovie.title;
+                this.editForm.length = userMovie.length;
+                this.editForm.year = userMovie.releaseYear;
+                this.editForm.rating = userMovie.rating;
+
+                $('#modal-edit-movie').modal('show');
             },
 
             /**
-             * Update the client being edited.
+             * Update the movie being edited.
              */
             update() {
-                this.persistClient(
-                    'put', '/oauth/clients/' + this.editForm.id,
-                    this.editForm, '#modal-edit-client'
+                this.persistMovie(
+                    'put', '/api/update-movie/' + this.editForm.movieId,
+                    this.editForm, '#modal-edit-movie'
                 );
             },
 
             /**
-             * Persist the client to storage using the given form.
+             * Persist the movie to storage using the given form.
              */
-            persistClient(method, uri, form, modal) {
+            persistMovie(method, uri, form, modal) {
                 form.errors = [];
 
                 axios[method](uri, form)
                     .then(response => {
-                        this.getClients();
+                        this.getUserMovies();
 
-                        form.name = '';
-                        form.redirect = '';
+                        form.title = '';
+                        form.Length = '';
+                        form.year = '';
+                        form.rating = '';
                         form.errors = [];
 
                         $(modal).modal('hide');
@@ -349,12 +443,12 @@
             },
 
             /**
-             * Destroy the given client.
+             * Destroy the given movie.
              */
-            destroy(client) {
-                axios.delete('/oauth/clients/' + client.id)
+            destroy(userMovie) {
+                axios.delete('/api/delete-movie/' + userMovie.id)
                         .then(response => {
-                            this.getClients();
+                            this.getUserMovies();
                         });
             }
         }

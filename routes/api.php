@@ -35,7 +35,13 @@ Route::post('register', 'API\PassportController@register');
 Route::group(['middleware' => 'auth:api'], function()
 {
     Route::post('get-details', 'API\PassportController@getDetails');
+
     Route::get('get-user-movies', 'API\MoviesAPIController@getUserMovies');
+    Route::post('create-movie', 'API\MoviesAPIController@createUserMovie');    
+    Route::put('update-movie/{id}', 'API\MoviesAPIController@updateUserMovie');
+    Route::delete('delete-movie/{id}', 'API\MoviesAPIController@deleteUserMovie');
+
+    Route::get('check-auth', 'API\PassportController@checkAuth');
     
     //Route::get('movies', 'MovieController@index')->name('movies');
 });
