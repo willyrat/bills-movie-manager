@@ -446,7 +446,7 @@
              * Destroy the given movie.
              */
             destroy(userMovie) {
-                axios.delete('/api/delete-movie/' + userMovie.id)
+                axios.delete('/api/delete-movie/' + userMovie.id) //userMovie.id is movieId
                         .then(response => {
                             this.getUserMovies();
                         });

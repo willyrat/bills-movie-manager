@@ -19,53 +19,53 @@ class MoviesAPIController extends Controller
 
     public $successStatus = 200;
     
-/**
+    /**
     * login api
     *
     * @return \Illuminate\Http\Response
     */
-public function getUserMovies(Request $request)
-{
-    Log::info('in MoviesAPIController getUserMovies... ');
-
-    
-    if(Auth::check())
+    public function getUserMovies(Request $request)
     {
-        Log::info('in MoviesAPIController getUserMovies - Auth passed');
-
-        $user = Auth::user();
-        
-        $success['userMovies'] = DB::table('user_movies')
-        ->join('users', 'users.id', '=', 'user_movies.userId')
-        ->join('movies', 'movies.id', '=', 'user_movies.movieId')
-        ->select('movies.id', 'users.firstName', 'users.lastName','movies.id', 'movies.title', 'movies.length', 'movies.releaseYear', 'user_movies.rating')
-        ->where('users.id', '=', $user->id)
-        ->get();;
+        Log::info('in MoviesAPIController getUserMovies... ');
 
         
-        return response()->json(['success' => $success], $this->successStatus);                
+        if(Auth::check())
+        {
+            Log::info('in MoviesAPIController getUserMovies - Auth passed');
+
+            $user = Auth::user();
+            
+            $success['userMovies'] = DB::table('user_movies')
+            ->join('users', 'users.id', '=', 'user_movies.userId')
+            ->join('movies', 'movies.id', '=', 'user_movies.movieId')
+            ->select('movies.id', 'users.firstName', 'users.lastName','movies.id', 'movies.title', 'movies.length', 'movies.releaseYear', 'user_movies.rating')
+            ->where('users.id', '=', $user->id)
+            ->get();;
+
+            
+            return response()->json(['success' => $success], $this->successStatus);                
+        }
+        else
+        {
+            return response()->json(['error'=>'Unauthorised'], 401);
+        }
     }
-    else
+
+
+    /**
+        * createUserMovie api
+        *
+        * @return \Illuminate\Http\Response
+        */
+    public function createUserMovie(Request $request)
     {
-        return response()->json(['error'=>'Unauthorised'], 401);
-    }
-}
+        Log::info('in MoviesAPIController createUserMovie... ');
 
-
-/**
-    * createUserMovie api
-    *
-    * @return \Illuminate\Http\Response
-    */
-public function createUserMovie(Request $request)
-{
-    Log::info('in MoviesAPIController createUserMovie... ');
-
-    
-    if(Auth::check())
-    {
-        Log::info('in MoviesAPIController createUserMovie - Auth passed');                
         
+        if(Auth::check())
+        {
+            Log::info('in MoviesAPIController createUserMovie - Auth passed');                
+            
             $validator = Validator::make($request->all(), 
             [
                 'title' => 'required',
@@ -74,14 +74,14 @@ public function createUserMovie(Request $request)
                 'rating' => 'required',                    
             ]);                
 
-        if ($validator->fails()) 
-        {
-            Log::info('error in MoviesAPIController createUserMovie - '. $validator->errors());
-            return response()->json(['error'=>$validator->errors()], 500);            
-        }
+            if ($validator->fails()) 
+            {
+                Log::info('error in MoviesAPIController createUserMovie - '. $validator->errors());
+                return response()->json(['error'=>$validator->errors()], 500);            
+            }
 
-        DB::beginTransaction();
-                        
+            DB::beginTransaction();
+                            
             $timestamp = date("Y-m-d H:i:s");
             $user = Auth::user();
             $foundErrors = array();
@@ -104,7 +104,8 @@ public function createUserMovie(Request $request)
                     $foundErrors[] = 'Failed to create movie.';
                     Log::info('error in MoviesAPIController createUserMovie movie insert - Failed to create movie.');
                 }
-            } catch(ValidationException $e)
+            } 
+            catch(ValidationException $e)
             {  
                 DB::rollback();
                 $foundErrors[] =  $e->getErrors();  //get error to send back with response
@@ -143,7 +144,8 @@ public function createUserMovie(Request $request)
                     //     Log::info('error in MoviesAPIController createUserMovie user_movies insert - Failed to create user_movies. userMovieId='.$userMovieId);
                     
                     // }
-                } catch(ValidationException $e)
+                } 
+                catch(ValidationException $e)
                 {                            
                     DB::rollback();
                     $foundErrors[] =  $e->getErrors();  //get error to send back with response
@@ -157,18 +159,18 @@ public function createUserMovie(Request $request)
                 }
             }
 
-        Log::info('done with movies in MoviesAPIController createUserMovie - ');
-        if (empty($foundErrors)) 
-        {
-            DB::commit();
-            $success['userMovie'] = json_encode(array('$movidId' => $movidId, 'title' => request('title'), 'lengthc' => request('length'), 'year' => request('year'), 'rating' => request('rating')));
-            return response()->json(['success' => $success], $this->successStatus);
-        }
-        else
-        {
-            //put DB::rollback(); everywhere an exception is found, in case we dont get to this spot
-            return response()->json(['errors'=>$foundErrors], 500);                      
-        }                
+            Log::info('done with movies in MoviesAPIController createUserMovie - ');
+            if (empty($foundErrors)) 
+            {
+                DB::commit();
+                $success['userMovie'] = json_encode(array('$movidId' => $movidId, 'title' => request('title'), 'lengthc' => request('length'), 'year' => request('year'), 'rating' => request('rating')));
+                return response()->json(['success' => $success], $this->successStatus);
+            }
+            else
+            {
+                //put DB::rollback(); everywhere an exception is found, in case we dont get to this spot
+                return response()->json(['errors'=>$foundErrors], 500);                      
+            }                
         }
         else
         {
@@ -188,7 +190,7 @@ public function createUserMovie(Request $request)
         //we should be protecting other user's data (if somone passes in a movie id that is not part of the user_movie PK pair)
         Log::info('in MoviesAPIController updateUserMovie... ');
         
-                   
+                    
         if(Auth::check())
         {
             Log::info('in MoviesAPIController updateUserMovie - Auth passed');                
@@ -223,7 +225,8 @@ public function createUserMovie(Request $request)
                                     'modifiedBy' => $user->id
                                 ]);
 
-                } catch(ValidationException $e)
+                } 
+                catch(ValidationException $e)
                 {  
                     DB::rollback();
                     $foundErrors[] =  $e->getErrors();  //get error to send back with response
@@ -290,13 +293,96 @@ public function createUserMovie(Request $request)
     *
     * @return \Illuminate\Http\Response
     */
-    public function deleteUserMovie(Request $request)
-    {
+    public function deleteUserMovie($id)
+    {        
         //since we are using the auth::user id and the passed in movie id on the user_movie table, 
         //we should be protecting other user's data (if somone passes in a movie id that is not part of the user_movie PK pair)
+        Log::info('in MoviesAPIController deleteUserMovie... id='.$id);
+        
+                    
+        if(Auth::check())
+        {
+            Log::info('in MoviesAPIController deleteUserMovie - Auth passed');                
+           
+            if (is_null($id) || $id < 1) 
+            {
+                Log::info('error in MoviesAPIController deleteUserMovie - missing movieId');
+                return response()->json(['error'=>['missing required field'=>'movieId']], 500);            
+            }
+            
+            DB::beginTransaction();
+        
+            $timestamp = date("Y-m-d H:i:s");
+            $user = Auth::user();
+            $foundErrors = array();
 
+            try 
+            {   
+                Log::info('now delete user_movies in MoviesAPIController deleteUserMovie - ');   
 
-      //  ->where('votes', '>', 100)->delete();
+                DB::table('user_movies')                
+                ->where('userId', '=', $user->id)                
+                ->where('movieId','=', $id)
+                ->delete();
 
+            } 
+            catch(ValidationException $e)
+            {  
+                DB::rollback();
+                $foundErrors[] =  $e->getErrors();  //get error to send back with response
+                Log::info('ValidationException in MoviesAPIController deleteUserMovie user_movies update - '. $e->getErrors());
+            }
+            catch(\Exception $e)
+            {
+                Log::info('Exception in MoviesAPIController deleteUserMovie user_movies update - e');
+                DB::rollback();
+                throw $e;
+            }
+
+            Log::info('done with user_movies in MoviesAPIController deleteUserMovie ');
+
+            if (empty($foundErrors)) 
+            {
+                Log::info('now delete movies in MoviesAPIController deleteUserMovie - ');
+                try 
+                {
+                    DB::table('movies')
+                    ->where('id', $id)
+                    ->delete();
+                    
+                } 
+                catch(ValidationException $e)
+                {                            
+                    DB::rollback();
+                    $foundErrors[] =  $e->getErrors();  //get error to send back with response
+                    Log::info('ValidationException in MoviesAPIController deleteUserMovie movies delete - '. $e->errors());
+                }
+                catch(\Exception $e)
+                {
+                    Log::info('Exception in MoviesAPIController deleteUserMovie movies delete - e');
+                    DB::rollback();
+                    throw $e;
+                }
+            }
+
+            Log::info('done with movies in MoviesAPIController deleteUserMovie - ');
+            Log::info($foundErrors);
+            if (empty($foundErrors)) 
+            {
+                DB::commit();
+                Log::info('commit done');
+                //$success['userMovie'] = json_encode(array('$movidId' =>  request('movieId'), 'title' => request('title'), 'length' => request('length'), 'year' => request('year'), 'rating' => request('rating')));
+                return response()->json(['success' => 'Success'], $this->successStatus);
+            }
+            else
+            {
+                //put DB::rollback(); everywhere an exception is found, in case we dont get to this spot
+                return response()->json(['errors'=>$foundErrors], 500);                      
+            }                
+        }
+        else
+        {
+            return response()->json(['error'=>'Unauthorised'], 401);
+        }
     }
 }
