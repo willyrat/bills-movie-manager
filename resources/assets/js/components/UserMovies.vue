@@ -34,6 +34,7 @@
                         <tr>
                             <th>Id</th>
                             <th>Title</th>
+                            <th>Format</th>
                             <th>Length</th>
                             <th>Year Released</th>
                             <th>Rating</th>
@@ -50,6 +51,11 @@
                             <!-- title -->
                             <td style="vertical-align: middle;">
                                 {{ userMovie.title }}
+                            </td>
+
+                            <!-- format -->
+                            <td style="vertical-align: middle;">
+                                1
                             </td>
 
                             <!-- length -->
@@ -123,7 +129,24 @@
                                     </span>
                                 </div>
                             </div>
+                            
+                            <!-- Format -->
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Format</label>
 
+                                <div class="col-md-7">
+                                    <select id="create-movie-formatId" v-model="createForm.formatId">
+                                        <option v-for="format in formats" :value="format.id">
+                                            {{format.name}}
+                                        </option>
+                                    </select>
+
+                                    <span class="help-block">
+                                        Format of your movie.
+                                    </span>
+                                </div>
+                            </div>
+                            
                             <!-- Length -->
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Length</label>
@@ -314,9 +337,12 @@
             return {
                 userMovies: [],
 
+                formats: [],
+
                 createForm: {
                     errors: [],
-                    title: '',
+                    title: '', 
+                    formatId: '', 
                     length: '',
                     year: '',
                     rating: ''
@@ -325,6 +351,7 @@
                 editForm: {
                     errors: [],
                     title: '',
+                    formatId: '', 
                     length: '',
                     year: '',
                     rating: ''
@@ -366,9 +393,15 @@
              * Get all of the movies for the user.
              */
             getUserMovies() {
-                axios.get('/api/get-user-movies')
-                        .then(response => {
-                            this.userMovies = response.data.success.userMovies;
+                axios.get('/api/get-formats')
+                        .then(response => 
+                        {
+                            this.formats = response.data.success.formats;
+                            axios.get('/api/get-user-movies')
+                                    .then(response => 
+                                    {
+                                        this.userMovies = response.data.success.userMovies;
+                                    });
                         });
             },
 
@@ -398,6 +431,7 @@
             edit(userMovie) {
                 this.editForm.movieId = userMovie.id;
                 this.editForm.title = userMovie.title;
+                this.editForm.formatId = userMovie.id;
                 this.editForm.length = userMovie.length;
                 this.editForm.year = userMovie.releaseYear;
                 this.editForm.rating = userMovie.rating;
@@ -426,6 +460,7 @@
                         this.getUserMovies();
 
                         form.title = '';
+                        form.formatId = '';
                         form.Length = '';
                         form.year = '';
                         form.rating = '';

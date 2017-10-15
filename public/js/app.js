@@ -45010,6 +45010,29 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     /*
@@ -45019,9 +45042,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return {
             userMovies: [],
 
+            formats: [],
+
             createForm: {
                 errors: [],
                 title: '',
+                formatId: '',
                 length: '',
                 year: '',
                 rating: ''
@@ -45030,6 +45056,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             editForm: {
                 errors: [],
                 title: '',
+                formatId: '',
                 length: '',
                 year: '',
                 rating: ''
@@ -45077,8 +45104,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         getUserMovies: function getUserMovies() {
             var _this = this;
 
-            axios.get('/api/get-user-movies').then(function (response) {
-                _this.userMovies = response.data.success.userMovies;
+            axios.get('/api/get-formats').then(function (response) {
+                _this.formats = response.data.success.formats;
+                axios.get('/api/get-user-movies').then(function (response) {
+                    _this.userMovies = response.data.success.userMovies;
+                });
             });
         },
 
@@ -45105,6 +45135,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         edit: function edit(userMovie) {
             this.editForm.movieId = userMovie.id;
             this.editForm.title = userMovie.title;
+            this.editForm.formatId = userMovie.id;
             this.editForm.length = userMovie.length;
             this.editForm.year = userMovie.releaseYear;
             this.editForm.rating = userMovie.rating;
@@ -45133,6 +45164,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 _this2.getUserMovies();
 
                 form.title = '';
+                form.formatId = '';
                 form.Length = '';
                 form.year = '';
                 form.rating = '';
@@ -45155,7 +45187,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         destroy: function destroy(userMovie) {
             var _this3 = this;
 
-            axios.delete('/api/delete-movie/' + userMovie.id).then(function (response) {
+            axios.delete('/api/delete-movie/' + userMovie.id) //userMovie.id is movieId
+            .then(function (response) {
                 _this3.getUserMovies();
             });
         }
@@ -45229,6 +45262,12 @@ var render = function() {
                         "\n                            " +
                           _vm._s(userMovie.title) +
                           "\n                        "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticStyle: { "vertical-align": "middle" } }, [
+                      _vm._v(
+                        "\n                            1\n                        "
                       )
                     ]),
                     _vm._v(" "),
@@ -45366,6 +45405,63 @@ var render = function() {
                       _c("span", { staticClass: "help-block" }, [
                         _vm._v(
                           "\n                                    Full title of movie.\n                                "
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { staticClass: "col-md-3 control-label" }, [
+                      _vm._v("Format")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-7" }, [
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.createForm.formatId,
+                              expression: "createForm.formatId"
+                            }
+                          ],
+                          attrs: { id: "create-movie-formatId" },
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.createForm.formatId = $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            }
+                          }
+                        },
+                        _vm._l(_vm.formats, function(format) {
+                          return _c(
+                            "option",
+                            { domProps: { value: format.id } },
+                            [
+                              _vm._v(
+                                "\n                                        " +
+                                  _vm._s(format.name) +
+                                  "\n                                    "
+                              )
+                            ]
+                          )
+                        })
+                      ),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "help-block" }, [
+                        _vm._v(
+                          "\n                                    Format of your movie.\n                                "
                         )
                       ])
                     ])
@@ -46022,6 +46118,8 @@ var staticRenderFns = [
         _c("th", [_vm._v("Id")]),
         _vm._v(" "),
         _c("th", [_vm._v("Title")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Format")]),
         _vm._v(" "),
         _c("th", [_vm._v("Length")]),
         _vm._v(" "),

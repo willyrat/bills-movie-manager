@@ -20,7 +20,7 @@ class MoviesAPIController extends Controller
     public $successStatus = 200;
     
     /**
-    * login api
+    * login getUserMovies
     *
     * @return \Illuminate\Http\Response
     */
@@ -38,7 +38,7 @@ class MoviesAPIController extends Controller
             $success['userMovies'] = DB::table('user_movies')
             ->join('users', 'users.id', '=', 'user_movies.userId')
             ->join('movies', 'movies.id', '=', 'user_movies.movieId')
-            ->select('movies.id', 'users.firstName', 'users.lastName','movies.id', 'movies.title', 'movies.length', 'movies.releaseYear', 'user_movies.rating')
+            ->select('movies.id', 'users.firstName', 'users.lastName','movies.id', 'movies.title', 'movies.length', 'movies.releaseYear', 'user_movies.rating', 'user_movies.formatId')
             ->where('users.id', '=', $user->id)
             ->get();;
 
@@ -385,4 +385,40 @@ class MoviesAPIController extends Controller
             return response()->json(['error'=>'Unauthorised'], 401);
         }
     }
+
+
+
+    /**
+    * login getMovieFormats
+    *
+    * @return \Illuminate\Http\Response
+    */
+    public function getMovieFormats(Request $request)
+    {
+        Log::info('in MoviesAPIController getMovieFormats... ');
+
+        
+        if(Auth::check())
+        {
+            Log::info('in MoviesAPIController getMovieFormats - Auth passed');
+
+            $user = Auth::user();
+            
+            $success['formats'] = DB::table('formats')
+            
+            ->select('formats.id', 'formats.name')
+            ->where('formats.active', '>', 0)
+            ->get();;
+
+            
+            return response()->json(['success' => $success], $this->successStatus);                
+        }
+        else
+        {
+            return response()->json(['error'=>'Unauthorised'], 401);
+        }
+    }
+
+
+    //TODO: create calls to crud formats ... delete will have ramifications that need to be handled 
 }
