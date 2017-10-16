@@ -44690,7 +44690,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n    cursor: pointer;\n}\n.m-b-none[data-v-0fec7cb6] {\n    margin-bottom: 0;\n}\n", ""]);
+exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n    cursor: pointer;\n}\n.m-b-none[data-v-0fec7cb6] {\n    margin-bottom: 0;\n}\n@media (max-width: 550px)\n{\n.toggle-header[data-v-0fec7cb6]\n    {\n        display:none;\n}\n.toggle-column[data-v-0fec7cb6]\n    {\n        display:none;\n}\n}\n@media (max-width: 375px)\n{\n.toggle-header2[data-v-0fec7cb6]\n    {\n        display:none;\n}\n.toggle-column2[data-v-0fec7cb6]\n    {\n        display:none;\n}\n}    \n\n", ""]);
 
 // exports
 
@@ -44703,6 +44703,49 @@ exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n    cursor: pointer;
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -45135,7 +45178,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         edit: function edit(userMovie) {
             this.editForm.movieId = userMovie.id;
             this.editForm.title = userMovie.title;
-            this.editForm.formatId = userMovie.id;
+            this.editForm.formatId = userMovie.formatId;
             this.editForm.length = userMovie.length;
             this.editForm.year = userMovie.releaseYear;
             this.editForm.rating = userMovie.rating;
@@ -45243,19 +45286,64 @@ var render = function() {
         _vm._v(" "),
         _vm.userMovies.length > 0
           ? _c("table", { staticClass: "table table-borderless m-b-none" }, [
-              _vm._m(0),
+              _c("thead", [
+                _c("tr", [
+                  _c(
+                    "th",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: false,
+                          expression: "false"
+                        }
+                      ]
+                    },
+                    [_vm._v("Id")]
+                  ),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Title")]),
+                  _vm._v(" "),
+                  _c("th", { staticClass: "toggle-header2" }, [
+                    _vm._v("Format")
+                  ]),
+                  _vm._v(" "),
+                  _c("th", { staticClass: "toggle-header" }, [
+                    _vm._v("Length")
+                  ]),
+                  _vm._v(" "),
+                  _c("th", { staticClass: "toggle-header2" }, [_vm._v("Year")]),
+                  _vm._v(" "),
+                  _c("th", { staticClass: "toggle-header" }, [_vm._v("Rating")])
+                ])
+              ]),
               _vm._v(" "),
               _c(
                 "tbody",
                 _vm._l(_vm.userMovies, function(userMovie) {
                   return _c("tr", [
-                    _c("td", { staticStyle: { "vertical-align": "middle" } }, [
-                      _vm._v(
-                        "\n                            " +
-                          _vm._s(userMovie.id) +
-                          "                                \n                        "
-                      )
-                    ]),
+                    _c(
+                      "td",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: false,
+                            expression: "false"
+                          }
+                        ],
+                        staticStyle: { "vertical-align": "middle" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(userMovie.id) +
+                            "                                \n                        "
+                        )
+                      ]
+                    ),
                     _vm._v(" "),
                     _c("td", { staticStyle: { "vertical-align": "middle" } }, [
                       _vm._v(
@@ -45265,23 +45353,55 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _c("td", { staticStyle: { "vertical-align": "middle" } }, [
-                      _vm._v(
-                        "\n                            1\n                        "
-                      )
-                    ]),
+                    _c(
+                      "td",
+                      {
+                        staticClass: "toggle-column2",
+                        staticStyle: { "vertical-align": "middle" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(
+                              _vm.formats[
+                                _vm.formats
+                                  .map(function(item) {
+                                    return item.id
+                                  })
+                                  .indexOf(userMovie.formatId)
+                              ].name
+                            ) +
+                            "\n                           \n                        "
+                        )
+                      ]
+                    ),
                     _vm._v(" "),
-                    _c("td", { staticStyle: { "vertical-align": "middle" } }, [
-                      _c("code", [_vm._v(_vm._s(userMovie.length))])
-                    ]),
+                    _c(
+                      "td",
+                      {
+                        staticClass: "toggle-column",
+                        staticStyle: { "vertical-align": "middle" }
+                      },
+                      [_c("code", [_vm._v(_vm._s(userMovie.length))])]
+                    ),
                     _vm._v(" "),
-                    _c("td", { staticStyle: { "vertical-align": "middle" } }, [
-                      _c("code", [_vm._v(_vm._s(userMovie.releaseYear))])
-                    ]),
+                    _c(
+                      "td",
+                      {
+                        staticClass: "toggle-column2",
+                        staticStyle: { "vertical-align": "middle" }
+                      },
+                      [_c("code", [_vm._v(_vm._s(userMovie.releaseYear))])]
+                    ),
                     _vm._v(" "),
-                    _c("td", { staticStyle: { "vertical-align": "middle" } }, [
-                      _c("code", [_vm._v(_vm._s(userMovie.rating))])
-                    ]),
+                    _c(
+                      "td",
+                      {
+                        staticClass: "toggle-column",
+                        staticStyle: { "vertical-align": "middle" }
+                      },
+                      [_c("code", [_vm._v(_vm._s(userMovie.rating))])]
+                    ),
                     _vm._v(" "),
                     _c("td", { staticStyle: { "vertical-align": "middle" } }, [
                       _c(
@@ -45295,9 +45415,13 @@ var render = function() {
                           }
                         },
                         [
-                          _vm._v(
-                            "\n                                Edit\n                            "
-                          )
+                          _c("img", {
+                            attrs: {
+                              src: "/images/pencil-32x32.png",
+                              alt: "Edit",
+                              title: "Edit"
+                            }
+                          })
                         ]
                       )
                     ]),
@@ -45314,9 +45438,13 @@ var render = function() {
                           }
                         },
                         [
-                          _vm._v(
-                            "\n                                Delete\n                            "
-                          )
+                          _c("img", {
+                            attrs: {
+                              src: "/images/deletered-32x32.png",
+                              alt: "Delete",
+                              title: "Delete"
+                            }
+                          })
                         ]
                       )
                     ])
@@ -45337,12 +45465,12 @@ var render = function() {
       [
         _c("div", { staticClass: "modal-dialog" }, [
           _c("div", { staticClass: "modal-content" }, [
-            _vm._m(1),
+            _vm._m(0),
             _vm._v(" "),
             _c("div", { staticClass: "modal-body" }, [
               _vm.createForm.errors.length > 0
                 ? _c("div", { staticClass: "alert alert-danger" }, [
-                    _vm._m(2),
+                    _vm._m(1),
                     _vm._v(" "),
                     _c("br"),
                     _vm._v(" "),
@@ -45753,12 +45881,12 @@ var render = function() {
       [
         _c("div", { staticClass: "modal-dialog" }, [
           _c("div", { staticClass: "modal-content" }, [
-            _vm._m(3),
+            _vm._m(2),
             _vm._v(" "),
             _c("div", { staticClass: "modal-body" }, [
               _vm.editForm.errors.length > 0
                 ? _c("div", { staticClass: "alert alert-danger" }, [
-                    _vm._m(4),
+                    _vm._m(3),
                     _vm._v(" "),
                     _c("br"),
                     _vm._v(" "),
@@ -45821,6 +45949,63 @@ var render = function() {
                       _c("span", { staticClass: "help-block" }, [
                         _vm._v(
                           "\n                                    Full title of movie.\n                                "
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { staticClass: "col-md-3 control-label" }, [
+                      _vm._v("Format")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-7" }, [
+                      _c(
+                        "select",
+                        {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.editForm.formatId,
+                              expression: "editForm.formatId"
+                            }
+                          ],
+                          attrs: { id: "edit-movie-formatId" },
+                          on: {
+                            change: function($event) {
+                              var $$selectedVal = Array.prototype.filter
+                                .call($event.target.options, function(o) {
+                                  return o.selected
+                                })
+                                .map(function(o) {
+                                  var val = "_value" in o ? o._value : o.value
+                                  return val
+                                })
+                              _vm.editForm.formatId = $event.target.multiple
+                                ? $$selectedVal
+                                : $$selectedVal[0]
+                            }
+                          }
+                        },
+                        _vm._l(_vm.formats, function(format) {
+                          return _c(
+                            "option",
+                            { domProps: { value: format.id } },
+                            [
+                              _vm._v(
+                                "\n                                        " +
+                                  _vm._s(format.name) +
+                                  "\n                                    "
+                              )
+                            ]
+                          )
+                        })
+                      ),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "help-block" }, [
+                        _vm._v(
+                          "\n                                    Format of your movie.\n                                "
                         )
                       ])
                     ])
@@ -46109,26 +46294,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Id")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Title")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Format")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Length")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Year Released")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Rating")])
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

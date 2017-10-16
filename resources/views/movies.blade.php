@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
+                <!-- <div class="panel-heading">Dashboard</div> -->
 
                 <div class="panel-body">
                     @if (session('status'))
@@ -15,14 +15,14 @@
                         </div>
                     @endif
 
-                    @if(Auth::check())
+                    <!-- @if(Auth::check())
                         You are logged in!
                     @endif
 
 
                     @if(Auth::guest())
                         you are guest
-                    @endif
+                    @endif -->
                 </div>
                 
                 <usermovies></usermovies>

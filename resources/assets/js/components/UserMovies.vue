@@ -6,6 +6,31 @@
     .m-b-none {
         margin-bottom: 0;
     }
+
+    @media (max-width: 550px)
+    {
+        .toggle-header
+        {
+            display:none;
+        }
+        .toggle-column
+        {
+            display:none;
+        }
+    }  
+
+    @media (max-width: 375px)
+    {
+        .toggle-header2
+        {
+            display:none;
+        }
+        .toggle-column2
+        {
+            display:none;
+        }
+    }    
+
 </style>
 
 <template>
@@ -32,56 +57,57 @@
                 <table class="table table-borderless m-b-none" v-if="userMovies.length > 0">
                     <thead>
                         <tr>
-                            <th>Id</th>
+                            <th v-show=false>Id</th>
                             <th>Title</th>
-                            <th>Format</th>
-                            <th>Length</th>
-                            <th>Year Released</th>
-                            <th>Rating</th>
+                            <th class="toggle-header2">Format</th>
+                            <th class="toggle-header">Length</th>
+                            <th class="toggle-header2">Year</th>
+                            <th class="toggle-header">Rating</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="userMovie in userMovies">
+                        <tr v-for="userMovie in userMovies"  >
                             <!-- ID -->
                             
-                            <td style="vertical-align: middle;" >
+                            <td v-show=false style="vertical-align: middle;">
                                 {{ userMovie.id }}                                
                             </td>
 
                             <!-- title -->
-                            <td style="vertical-align: middle;">
+                            <td style="vertical-align: middle;" >
                                 {{ userMovie.title }}
                             </td>
 
                             <!-- format -->
-                            <td style="vertical-align: middle;">
-                                1
+                            <td style="vertical-align: middle;" class="toggle-column2">
+                                {{formats[formats.map(item => item.id).indexOf(userMovie.formatId)].name}}
+                               
                             </td>
 
                             <!-- length -->
-                            <td style="vertical-align: middle;">
+                            <td style="vertical-align: middle;" class="toggle-column">
                                 <code>{{ userMovie.length }}</code>
                             </td>
                             <!-- Year -->
-                            <td style="vertical-align: middle;">
+                            <td style="vertical-align: middle;" class="toggle-column2">
                                 <code>{{ userMovie.releaseYear }}</code>
                             </td>
                             <!-- Rating -->
-                            <td style="vertical-align: middle;">
+                            <td style="vertical-align: middle;" class="toggle-column">
                                 <code>{{ userMovie.rating }}</code>
                             </td>
 
                             <!-- Edit Button -->
                             <td style="vertical-align: middle;">
-                                <a class="action-link" @click="edit(userMovie)">
-                                    Edit
+                                <a class="action-link" @click="edit(userMovie)">                                    
+                                    <img  src="/images/pencil-32x32.png" alt="Edit" title="Edit" >
                                 </a>
                             </td>
 
                             <!-- Delete Button -->
                             <td style="vertical-align: middle;">
                                 <a class="action-link text-danger" @click="destroy(userMovie)">
-                                    Delete
+                                    <img  src="/images/deletered-32x32.png" alt="Delete" title="Delete">
                                 </a>
                             </td>
                         </tr>
@@ -253,6 +279,23 @@
 
                                     <span class="help-block">
                                         Full title of movie.
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Format -->
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Format</label>
+
+                                <div class="col-md-7">
+                                    <select id="edit-movie-formatId" v-model="editForm.formatId">
+                                        <option v-for="format in formats" :value="format.id">
+                                            {{format.name}}
+                                        </option>
+                                    </select>
+
+                                    <span class="help-block">
+                                        Format of your movie.
                                     </span>
                                 </div>
                             </div>
@@ -431,7 +474,7 @@
             edit(userMovie) {
                 this.editForm.movieId = userMovie.id;
                 this.editForm.title = userMovie.title;
-                this.editForm.formatId = userMovie.id;
+                this.editForm.formatId = userMovie.formatId;
                 this.editForm.length = userMovie.length;
                 this.editForm.year = userMovie.releaseYear;
                 this.editForm.rating = userMovie.rating;

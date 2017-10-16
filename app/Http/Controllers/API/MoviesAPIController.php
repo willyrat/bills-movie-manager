@@ -72,6 +72,7 @@ class MoviesAPIController extends Controller
                 'length' => 'required',
                 'year' => 'required',
                 'rating' => 'required',                    
+                'formatId' => 'required',                    
             ]);                
 
             if ($validator->fails()) 
@@ -129,7 +130,7 @@ class MoviesAPIController extends Controller
                         ['userId' => $user->id, 
                         'movieId' => $movidId, 
                         'rating' => request('rating'), 
-                        'formatId' => 1, 
+                        'formatId' => request('formatId'), 
                         'createdDate' => $timestamp, 
                         'createdBy' => $user->id,                     
                         'active' => 1]
@@ -198,6 +199,7 @@ class MoviesAPIController extends Controller
                 $validator = Validator::make($request->all(), 
                 [
                     'movieId' => 'required',                                        
+                    'formatId' => 'required',                                        
                 ]);                
 
             if ($validator->fails()) 
@@ -219,7 +221,7 @@ class MoviesAPIController extends Controller
                     DB::table('user_movies')                
                         ->where('userId', '=', $user->id)                
                         ->where('movieId','=', request('movieId'))
-                        ->update([  'formatId' => 1,                //TODO: need to fix this to work with table
+                        ->update([  'formatId' => request('formatId'),                //TODO: need to fix this to work with table
                                     'rating' => request('rating'),                                    
                                     'modifiedDate' => $timestamp,
                                     'modifiedBy' => $user->id
