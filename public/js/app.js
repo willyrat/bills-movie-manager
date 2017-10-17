@@ -44690,7 +44690,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n        cursor: pointer;\n}\n.m-b-none[data-v-0fec7cb6] {\n        margin-bottom: 0;\n}\n.table > thead > tr > th[data-v-0fec7cb6], .table > thead > tr > td[data-v-0fec7cb6], .table > tbody > tr > th[data-v-0fec7cb6], .table > tbody > tr > td[data-v-0fec7cb6], .table > tfoot > tr > th[data-v-0fec7cb6], .table > tfoot > tr > td[data-v-0fec7cb6]\n{\n    padding: 4px;\n}\n@media (max-width: 642px)\n{\n.table > thead > tr > th[data-v-0fec7cb6], .table > thead > tr > td[data-v-0fec7cb6], .table > tbody > tr > th[data-v-0fec7cb6], .table > tbody > tr > td[data-v-0fec7cb6], .table > tfoot > tr > th[data-v-0fec7cb6], .table > tfoot > tr > td[data-v-0fec7cb6]\n    {\n        padding: 2px;\n        font-size: 13px;\n}\n}\n@media (max-width: 585px)\n    {\n.toggle-header[data-v-0fec7cb6]\n        {\n            display:none;\n}\n.toggle-column[data-v-0fec7cb6]\n        {\n            display:none;\n}\n}\n@media (max-width: 467px)\n    {\n.toggle-header2[data-v-0fec7cb6]\n        {\n            display:none;\n}\n.toggle-column2[data-v-0fec7cb6]\n        {\n            display:none;\n}\n}\nth.active[data-v-0fec7cb6] {\n  color: #000;\n}\nth.active .arrow[data-v-0fec7cb6] {\n  opacity: 1;\n}\n.arrow[data-v-0fec7cb6] {\n  display: inline-block;\n  vertical-align: middle;\n  width: 0;\n  height: 0;\n  margin-left: 5px;\n  opacity: 0.66;\n}\n.arrow.asc[data-v-0fec7cb6] {\n  border-left: 4px solid transparent;\n  border-right: 4px solid transparent;\n  border-bottom: 4px solid #000;\n}\n.arrow.desc[data-v-0fec7cb6] {\n  border-left: 4px solid transparent;\n  border-right: 4px solid transparent;\n  border-top: 4px solid #000;\n}\n.arrow.none[data-v-0fec7cb6] {\n  border-left: 0px solid transparent;\n  border-right: 0px solid transparent;\n  border-top: 0px solid #000;\n} \n\n", ""]);
+exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n        cursor: pointer;\n}\n.m-b-none[data-v-0fec7cb6] {\n        margin-bottom: 0;\n}\n.table > thead > tr > th[data-v-0fec7cb6], .table > thead > tr > td[data-v-0fec7cb6], .table > tbody > tr > th[data-v-0fec7cb6], .table > tbody > tr > td[data-v-0fec7cb6], .table > tfoot > tr > th[data-v-0fec7cb6], .table > tfoot > tr > td[data-v-0fec7cb6]\n{\n    padding: 4px;\n}\n.form-control-small[data-v-0fec7cb6] \n{\n       width: 20%;\n}\n@media (max-width: 642px)\n{\n.table > thead > tr > th[data-v-0fec7cb6], .table > thead > tr > td[data-v-0fec7cb6], .table > tbody > tr > th[data-v-0fec7cb6], .table > tbody > tr > td[data-v-0fec7cb6], .table > tfoot > tr > th[data-v-0fec7cb6], .table > tfoot > tr > td[data-v-0fec7cb6]\n    {\n        padding: 2px;\n        font-size: 13px;\n}\n}\n@media (max-width: 585px)\n    {\n.toggle-header[data-v-0fec7cb6]\n        {\n            display:none;\n}\n.toggle-column[data-v-0fec7cb6]\n        {\n            display:none;\n}\n}\n@media (max-width: 467px)\n    {\n.toggle-header2[data-v-0fec7cb6]\n        {\n            display:none;\n}\n.toggle-column2[data-v-0fec7cb6]\n        {\n            display:none;\n}\n}\nth.active[data-v-0fec7cb6] {\n  color: #000;\n}\nth.active .arrow[data-v-0fec7cb6] {\n  opacity: 1;\n}\n.arrow[data-v-0fec7cb6] {\n  display: inline-block;\n  vertical-align: middle;\n  width: 0;\n  height: 0;\n  margin-left: 5px;\n  opacity: 0.66;\n}\n.arrow.asc[data-v-0fec7cb6] {\n  border-left: 4px solid transparent;\n  border-right: 4px solid transparent;\n  border-bottom: 4px solid #000;\n}\n.arrow.desc[data-v-0fec7cb6] {\n  border-left: 4px solid transparent;\n  border-right: 4px solid transparent;\n  border-top: 4px solid #000;\n}\n.arrow.none[data-v-0fec7cb6] {\n  border-left: 0px solid transparent;\n  border-right: 0px solid transparent;\n  border-top: 0px solid #000;\n} \n\n", ""]);
 
 // exports
 
@@ -44703,6 +44703,11 @@ exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n        cursor: poin
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+//
+//
+//
+//
+//
 //
 //
 //
@@ -45322,10 +45327,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         destroy: function destroy(userMovie) {
             var _this4 = this;
 
-            axios.delete('/api/delete-movie/' + userMovie.id) //userMovie.id is movieId
-            .then(function (response) {
-                _this4.getUserMovies();
-            });
+            if (confirm("Are you sure you want to delete this movie?") == true) {
+                axios.delete('/api/delete-movie/' + userMovie.id) //userMovie.id is movieId
+                .then(function (response) {
+                    _this4.getUserMovies();
+                });
+            }
         }
     }
 });
@@ -45824,7 +45831,7 @@ var render = function() {
                             expression: "createForm.lengthHour"
                           }
                         ],
-                        staticClass: "form-control",
+                        staticClass: "form-control-small",
                         attrs: { type: "text", name: "lengthHour" },
                         domProps: { value: _vm.createForm.lengthHour },
                         on: {
@@ -45845,7 +45852,7 @@ var render = function() {
                           }
                         }
                       }),
-                      _vm._v("h  \n                                "),
+                      _vm._v(" hr  \n                                "),
                       _c("input", {
                         directives: [
                           {
@@ -45855,7 +45862,7 @@ var render = function() {
                             expression: "createForm.lengthMinute"
                           }
                         ],
-                        staticClass: "form-control",
+                        staticClass: "form-control-small",
                         attrs: { type: "text", name: "lengthMinute" },
                         domProps: { value: _vm.createForm.lengthMinute },
                         on: {
@@ -45876,7 +45883,7 @@ var render = function() {
                           }
                         }
                       }),
-                      _vm._v("min \n                                "),
+                      _vm._v(" m \n                                "),
                       _c("span", { staticClass: "help-block" }, [
                         _vm._v(
                           "\n                                    The length of the movie.\n                                "
@@ -45900,7 +45907,7 @@ var render = function() {
                             expression: "createForm.year"
                           }
                         ],
-                        staticClass: "form-control",
+                        staticClass: "form-control-small",
                         attrs: { type: "text", name: "year" },
                         domProps: { value: _vm.createForm.year },
                         on: {
@@ -46271,7 +46278,7 @@ var render = function() {
                             expression: "editForm.lengthHour"
                           }
                         ],
-                        staticClass: "form-control",
+                        staticClass: "form-control-small",
                         attrs: { type: "text", name: "lengthHour" },
                         domProps: { value: _vm.editForm.lengthHour },
                         on: {
@@ -46292,7 +46299,7 @@ var render = function() {
                           }
                         }
                       }),
-                      _vm._v("h  \n                                "),
+                      _vm._v(" hr  \n                                "),
                       _c("input", {
                         directives: [
                           {
@@ -46302,7 +46309,7 @@ var render = function() {
                             expression: "editForm.lengthMinute"
                           }
                         ],
-                        staticClass: "form-control",
+                        staticClass: "form-control-small",
                         attrs: { type: "text", name: "lengthMinute" },
                         domProps: { value: _vm.editForm.lengthMinute },
                         on: {
@@ -46323,7 +46330,7 @@ var render = function() {
                           }
                         }
                       }),
-                      _vm._v("min\n\n                                "),
+                      _vm._v(" m\n\n                                "),
                       _c("span", { staticClass: "help-block" }, [
                         _vm._v(
                           "\n                                    The length of the movie.\n                                "
@@ -46347,7 +46354,7 @@ var render = function() {
                             expression: "editForm.year"
                           }
                         ],
-                        staticClass: "form-control",
+                        staticClass: "form-control-small",
                         attrs: { type: "text", name: "year" },
                         domProps: { value: _vm.editForm.year },
                         on: {

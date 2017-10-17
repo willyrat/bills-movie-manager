@@ -93,8 +93,7 @@ class MoviesAPIController extends Controller
                 'title' => 'required',
                 'lengthHour' => 'required',
                 'lengthMinute' => 'required',
-                'year' => 'required',
-                'rating' => 'required',                    
+                'year' => 'required',                               
                 'formatId' => 'required',                    
             ]);                
 
@@ -244,7 +243,7 @@ class MoviesAPIController extends Controller
                     DB::table('user_movies')                
                         ->where('userId', '=', $user->id)                
                         ->where('movieId','=', request('movieId'))
-                        ->update([  'formatId' => request('formatId'),                //TODO: need to fix this to work with table
+                        ->update([  'formatId' => request('formatId'),                
                                     'rating' => request('rating'),                                    
                                     'modifiedDate' => $timestamp,
                                     'modifiedBy' => $user->id

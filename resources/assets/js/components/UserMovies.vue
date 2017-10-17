@@ -12,6 +12,11 @@
     padding: 4px;
 }
 
+.form-control-small 
+{
+       width: 20%;  
+}
+
 @media (max-width: 642px)
 {
     .table > thead > tr > th, .table > thead > tr > td, .table > tbody > tr > th, .table > tbody > tr > td, .table > tfoot > tr > th, .table > tfoot > tr > td
@@ -227,8 +232,8 @@ th.active .arrow {
                                 <label class="col-md-3 control-label">Length</label>
 
                                 <div class="col-md-7">
-                                    <input type="text" class="form-control" name="lengthHour" @keyup.enter="store" v-model="createForm.lengthHour">h  
-                                    <input type="text" class="form-control" name="lengthMinute" @keyup.enter="store" v-model="createForm.lengthMinute">min 
+                                    <input type="text" class="form-control-small" name="lengthHour" @keyup.enter="store" v-model="createForm.lengthHour"> hr  
+                                    <input type="text" class="form-control-small" name="lengthMinute" @keyup.enter="store" v-model="createForm.lengthMinute"> m 
                                     <span class="help-block">
                                         The length of the movie.
                                     </span>
@@ -240,7 +245,7 @@ th.active .arrow {
                                 <label class="col-md-3 control-label">Year</label>
 
                                 <div class="col-md-7">
-                                    <input type="text" class="form-control" name="year"
+                                    <input type="text" class="form-control-small" name="year"
                                                     @keyup.enter="store" v-model="createForm.year">
 
                                     <span class="help-block">
@@ -353,8 +358,8 @@ th.active .arrow {
                                 <label class="col-md-3 control-label">Length</label>
 
                                 <div class="col-md-7">                                    
-                                    <input type="text" class="form-control" name="lengthHour" @keyup.enter="store" v-model="editForm.lengthHour">h  
-                                    <input type="text" class="form-control" name="lengthMinute" @keyup.enter="store" v-model="editForm.lengthMinute">min
+                                    <input type="text" class="form-control-small" name="lengthHour" @keyup.enter="store" v-model="editForm.lengthHour"> hr  
+                                    <input type="text" class="form-control-small" name="lengthMinute" @keyup.enter="store" v-model="editForm.lengthMinute"> m
 
                                     <span class="help-block">
                                         The length of the movie.
@@ -367,7 +372,7 @@ th.active .arrow {
                                 <label class="col-md-3 control-label">Year</label>
 
                                 <div class="col-md-7">
-                                    <input type="text" class="form-control" name="year"
+                                    <input type="text" class="form-control-small" name="year"
                                                     @keyup.enter="store" v-model="editForm.year">
 
                                     <span class="help-block">
@@ -625,11 +630,15 @@ th.active .arrow {
             /**
              * Destroy the given movie.
              */
-            destroy(userMovie) {
-                axios.delete('/api/delete-movie/' + userMovie.id) //userMovie.id is movieId
-                        .then(response => {
-                            this.getUserMovies();
-                        });
+            destroy(userMovie) 
+            {
+                if (confirm("Are you sure you want to delete this movie?") == true) 
+                {
+                    axios.delete('/api/delete-movie/' + userMovie.id) //userMovie.id is movieId
+                            .then(response => {
+                                this.getUserMovies();
+                            });
+                }
             }
         }
     }
