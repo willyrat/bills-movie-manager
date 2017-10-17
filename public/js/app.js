@@ -44690,7 +44690,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n        cursor: pointer;\n}\n.m-b-none[data-v-0fec7cb6] {\n        margin-bottom: 0;\n}\n@media (max-width: 550px)\n    {\n.toggle-header[data-v-0fec7cb6]\n        {\n            display:none;\n}\n.toggle-column[data-v-0fec7cb6]\n        {\n            display:none;\n}\n}\n@media (max-width: 375px)\n    {\n.toggle-header2[data-v-0fec7cb6]\n        {\n            display:none;\n}\n.toggle-column2[data-v-0fec7cb6]\n        {\n            display:none;\n}\n}\nth.active[data-v-0fec7cb6] {\n  color: #000;\n}\nth.active .arrow[data-v-0fec7cb6] {\n  opacity: 1;\n}\n.arrow[data-v-0fec7cb6] {\n  display: inline-block;\n  vertical-align: middle;\n  width: 0;\n  height: 0;\n  margin-left: 5px;\n  opacity: 0.66;\n}\n.arrow.asc[data-v-0fec7cb6] {\n  border-left: 4px solid transparent;\n  border-right: 4px solid transparent;\n  border-bottom: 4px solid #000;\n}\n.arrow.dsc[data-v-0fec7cb6] {\n  border-left: 4px solid transparent;\n  border-right: 4px solid transparent;\n  border-top: 4px solid #000;\n}\n.arrow.none[data-v-0fec7cb6] {\n  border-left: 0px solid transparent;\n  border-right: 0px solid transparent;\n  border-top: 0px solid #000;\n} \n\n", ""]);
+exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n        cursor: pointer;\n}\n.m-b-none[data-v-0fec7cb6] {\n        margin-bottom: 0;\n}\n.table > thead > tr > th[data-v-0fec7cb6], .table > thead > tr > td[data-v-0fec7cb6], .table > tbody > tr > th[data-v-0fec7cb6], .table > tbody > tr > td[data-v-0fec7cb6], .table > tfoot > tr > th[data-v-0fec7cb6], .table > tfoot > tr > td[data-v-0fec7cb6]\n{\n    padding: 4px;\n}\n@media (max-width: 642px)\n{\n.table > thead > tr > th[data-v-0fec7cb6], .table > thead > tr > td[data-v-0fec7cb6], .table > tbody > tr > th[data-v-0fec7cb6], .table > tbody > tr > td[data-v-0fec7cb6], .table > tfoot > tr > th[data-v-0fec7cb6], .table > tfoot > tr > td[data-v-0fec7cb6]\n    {\n        padding: 2px;\n        font-size: 13px;\n}\n}\n@media (max-width: 585px)\n    {\n.toggle-header[data-v-0fec7cb6]\n        {\n            display:none;\n}\n.toggle-column[data-v-0fec7cb6]\n        {\n            display:none;\n}\n}\n@media (max-width: 467px)\n    {\n.toggle-header2[data-v-0fec7cb6]\n        {\n            display:none;\n}\n.toggle-column2[data-v-0fec7cb6]\n        {\n            display:none;\n}\n}\nth.active[data-v-0fec7cb6] {\n  color: #000;\n}\nth.active .arrow[data-v-0fec7cb6] {\n  opacity: 1;\n}\n.arrow[data-v-0fec7cb6] {\n  display: inline-block;\n  vertical-align: middle;\n  width: 0;\n  height: 0;\n  margin-left: 5px;\n  opacity: 0.66;\n}\n.arrow.asc[data-v-0fec7cb6] {\n  border-left: 4px solid transparent;\n  border-right: 4px solid transparent;\n  border-bottom: 4px solid #000;\n}\n.arrow.desc[data-v-0fec7cb6] {\n  border-left: 4px solid transparent;\n  border-right: 4px solid transparent;\n  border-top: 4px solid #000;\n}\n.arrow.none[data-v-0fec7cb6] {\n  border-left: 0px solid transparent;\n  border-right: 0px solid transparent;\n  border-top: 0px solid #000;\n} \n\n", ""]);
 
 // exports
 
@@ -44703,6 +44703,19 @@ exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n        cursor: poin
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -45127,6 +45140,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 title: '',
                 formatId: '',
                 length: '',
+                lengthHour: '',
+                lengthMinute: '',
                 year: '',
                 rating: ''
             },
@@ -45136,6 +45151,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 title: '',
                 formatId: '',
                 length: '',
+                lengthHour: '',
+                lengthMinute: '',
                 year: '',
                 rating: ''
             },
@@ -45183,7 +45200,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         /**
          * Get all of the movies for the user.
          */
-        getUserMovies: function getUserMovies(orderBy) {
+        getUserMovies: function getUserMovies() {
             var _this = this;
 
             axios.get('/api/get-formats').then(function (response) {
@@ -45200,12 +45217,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 });
             });
         },
-        getSortedUserMovies: function getSortedUserMovies(orderBy) {
+        getSortedUserMovies: function getSortedUserMovies(orderBy) //TODO: look into using just getUserMovies
+        {
             var _this2 = this;
 
-            //TODO: fix direction...it is only going asc and none
-            this.sortOrders[orderBy] == 0 ? this.sortOrders[orderBy] = -1 : this.sortOrders[orderBy] < 0 ? this.sortOrders[orderBy] = 1 : this.sortOrders[orderBy] = 0;
-            var direction = this.sortOrders[orderBy] > 0 ? 'asc' : this.sortOrders[orderBy] < 0 ? 'dsc' : 'none';
+            this.sortOrders[orderBy] == 0 ? this.sortOrders[orderBy] = 1 : this.sortOrders[orderBy] > 0 ? this.sortOrders[orderBy] = -1 : this.sortOrders[orderBy] = 0;
+            var direction = this.sortOrders[orderBy] > 0 ? 'asc' : this.sortOrders[orderBy] < 0 ? 'desc' : 'none';
             axios.get('/api/get-user-movies?orderBy=' + orderBy + "&direction=" + direction).then(function (response) {
                 _this2.userMovies = response.data.success.userMovies;
 
@@ -45217,7 +45234,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         _this2.sortOrders[temp[i]] = 0;
                     }
 
-                    _this2.sortOrders[response.data.success.sorting['orderBy']] = response.data.success.sorting['direction'] == 'asc' ? 1 : -1; //TODO put in none
+                    _this2.sortOrders[response.data.success.sorting['orderBy']] = response.data.success.sorting['direction'] == 'asc' ? 1 : response.data.success.sorting['direction'] == 'desc' ? -1 : 0;
 
                     _this2.sortKey = response.data.success.sorting['orderBy'];
                 }
@@ -45237,6 +45254,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * Create a new movie for the user.
          */
         store: function store() {
+            this.createForm.length = this.createForm.lengthHour * 60 + this.createForm.lengthMinute;
             this.persistMovie('post', 'api/create-movie', this.createForm, '#modal-create-movie');
         },
 
@@ -45248,9 +45266,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.editForm.movieId = userMovie.id;
             this.editForm.title = userMovie.title;
             this.editForm.formatId = userMovie.formatId;
-            this.editForm.length = userMovie.length;
+            this.editForm.lengthHour = userMovie.lengthHour;
+            this.editForm.lengthMinute = userMovie.lengthMinute;
             this.editForm.year = userMovie.releaseYear;
             this.editForm.rating = userMovie.rating;
+            this.editForm.length = '';
 
             $('#modal-edit-movie').modal('show');
         },
@@ -45260,6 +45280,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * Update the movie being edited.
          */
         update: function update() {
+            this.editForm.length = this.editForm.lengthHour * 60 + this.editForm.lengthMinute;
             this.persistMovie('put', '/api/update-movie/' + this.editForm.movieId, this.editForm, '#modal-edit-movie');
         },
 
@@ -45277,10 +45298,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 form.title = '';
                 form.formatId = '';
-                form.Length = '';
+                form.lengthHour = '';
+                form.lengthMinute = '';
                 form.year = '';
                 form.rating = '';
                 form.errors = [];
+                form.length = '';
 
                 $(modal).modal('hide');
             }).catch(function (error) {
@@ -45383,13 +45406,13 @@ var render = function() {
                       }
                     },
                     [
-                      _vm._v("                                Title "),
+                      _vm._v("Title "),
                       _c("span", {
                         staticClass: "arrow",
                         class:
                           _vm.sortOrders["title"] > 0
                             ? "asc"
-                            : _vm.sortOrders["title"] < 0 ? "des" : "none"
+                            : _vm.sortOrders["title"] < 0 ? "desc" : "none"
                       })
                     ]
                   ),
@@ -45406,13 +45429,13 @@ var render = function() {
                       }
                     },
                     [
-                      _vm._v(" Format "),
+                      _vm._v("Format"),
                       _c("span", {
                         staticClass: "arrow",
                         class:
                           _vm.sortOrders["name"] > 0
                             ? "asc"
-                            : _vm.sortOrders["name"] < 0 ? "des" : "none"
+                            : _vm.sortOrders["name"] < 0 ? "desc" : "none"
                       })
                     ]
                   ),
@@ -45429,13 +45452,13 @@ var render = function() {
                       }
                     },
                     [
-                      _vm._v("  Length "),
+                      _vm._v("Length"),
                       _c("span", {
                         staticClass: "arrow",
                         class:
                           _vm.sortOrders["length"] > 0
                             ? "asc"
-                            : _vm.sortOrders["length"] < 0 ? "des" : "none"
+                            : _vm.sortOrders["length"] < 0 ? "desc" : "none"
                       })
                     ]
                   ),
@@ -45452,13 +45475,15 @@ var render = function() {
                       }
                     },
                     [
-                      _vm._v(" Year "),
+                      _vm._v("Year"),
                       _c("span", {
                         staticClass: "arrow",
                         class:
                           _vm.sortOrders["releaseYear"] > 0
                             ? "asc"
-                            : _vm.sortOrders["releaseYear"] < 0 ? "des" : "none"
+                            : _vm.sortOrders["releaseYear"] < 0
+                              ? "desc"
+                              : "none"
                       })
                     ]
                   ),
@@ -45475,13 +45500,13 @@ var render = function() {
                       }
                     },
                     [
-                      _vm._v("  Rating "),
+                      _vm._v("Rating"),
                       _c("span", {
                         staticClass: "arrow",
                         class:
                           _vm.sortOrders["rating"] > 0
                             ? "asc"
-                            : _vm.sortOrders["rating"] < 0 ? "des" : "none"
+                            : _vm.sortOrders["rating"] < 0 ? "desc" : "none"
                       })
                     ]
                   )
@@ -45551,7 +45576,15 @@ var render = function() {
                         staticClass: "toggle-column",
                         staticStyle: { "vertical-align": "middle" }
                       },
-                      [_c("code", [_vm._v(_vm._s(userMovie.length))])]
+                      [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(userMovie.lengthHour) +
+                            " hr " +
+                            _vm._s(userMovie.lengthMinute) +
+                            " m\n                        "
+                        )
+                      ]
                     ),
                     _vm._v(" "),
                     _c(
@@ -45560,7 +45593,13 @@ var render = function() {
                         staticClass: "toggle-column2",
                         staticStyle: { "vertical-align": "middle" }
                       },
-                      [_c("code", [_vm._v(_vm._s(userMovie.releaseYear))])]
+                      [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(userMovie.releaseYear) +
+                            "\n                        "
+                        )
+                      ]
                     ),
                     _vm._v(" "),
                     _c(
@@ -45569,7 +45608,13 @@ var render = function() {
                         staticClass: "toggle-column",
                         staticStyle: { "vertical-align": "middle" }
                       },
-                      [_c("code", [_vm._v(_vm._s(userMovie.rating))])]
+                      [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(userMovie.rating) +
+                            "\n                        "
+                        )
+                      ]
                     ),
                     _vm._v(" "),
                     _c("td", { staticStyle: { "vertical-align": "middle" } }, [
@@ -45775,13 +45820,13 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.createForm.length,
-                            expression: "createForm.length"
+                            value: _vm.createForm.lengthHour,
+                            expression: "createForm.lengthHour"
                           }
                         ],
                         staticClass: "form-control",
-                        attrs: { type: "text", name: "length" },
-                        domProps: { value: _vm.createForm.length },
+                        attrs: { type: "text", name: "lengthHour" },
+                        domProps: { value: _vm.createForm.lengthHour },
                         on: {
                           keyup: function($event) {
                             if (
@@ -45796,14 +45841,45 @@ var render = function() {
                             if ($event.target.composing) {
                               return
                             }
-                            _vm.createForm.length = $event.target.value
+                            _vm.createForm.lengthHour = $event.target.value
                           }
                         }
                       }),
-                      _vm._v(" "),
+                      _vm._v("h  \n                                "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.createForm.lengthMinute,
+                            expression: "createForm.lengthMinute"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "lengthMinute" },
+                        domProps: { value: _vm.createForm.lengthMinute },
+                        on: {
+                          keyup: function($event) {
+                            if (
+                              !("button" in $event) &&
+                              _vm._k($event.keyCode, "enter", 13)
+                            ) {
+                              return null
+                            }
+                            _vm.store($event)
+                          },
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.createForm.lengthMinute = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v("min \n                                "),
                       _c("span", { staticClass: "help-block" }, [
                         _vm._v(
-                          "\n                                    The length of the movie in minutes.\n                                "
+                          "\n                                    The length of the movie.\n                                "
                         )
                       ])
                     ])
@@ -46191,13 +46267,13 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.editForm.length,
-                            expression: "editForm.length"
+                            value: _vm.editForm.lengthHour,
+                            expression: "editForm.lengthHour"
                           }
                         ],
                         staticClass: "form-control",
-                        attrs: { type: "text", name: "length" },
-                        domProps: { value: _vm.editForm.length },
+                        attrs: { type: "text", name: "lengthHour" },
+                        domProps: { value: _vm.editForm.lengthHour },
                         on: {
                           keyup: function($event) {
                             if (
@@ -46212,14 +46288,45 @@ var render = function() {
                             if ($event.target.composing) {
                               return
                             }
-                            _vm.editForm.length = $event.target.value
+                            _vm.editForm.lengthHour = $event.target.value
                           }
                         }
                       }),
-                      _vm._v(" "),
+                      _vm._v("h  \n                                "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.editForm.lengthMinute,
+                            expression: "editForm.lengthMinute"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { type: "text", name: "lengthMinute" },
+                        domProps: { value: _vm.editForm.lengthMinute },
+                        on: {
+                          keyup: function($event) {
+                            if (
+                              !("button" in $event) &&
+                              _vm._k($event.keyCode, "enter", 13)
+                            ) {
+                              return null
+                            }
+                            _vm.store($event)
+                          },
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.editForm.lengthMinute = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v("min\n\n                                "),
                       _c("span", { staticClass: "help-block" }, [
                         _vm._v(
-                          "\n                                    The length of the movie in minutes.\n                                "
+                          "\n                                    The length of the movie.\n                                "
                         )
                       ])
                     ])

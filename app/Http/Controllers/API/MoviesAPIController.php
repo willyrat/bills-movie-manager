@@ -43,7 +43,7 @@ class MoviesAPIController extends Controller
             $tableInfo['title'] = 'movies';
             $tableInfo['releaseYear'] = 'movies';
 
-            if(!is_null(request('orderBy')) && !is_null('direction'))
+            if(!is_null(request('orderBy')) && !is_null(request('direction')) && request('direction') != 'none')
             {                
                 $orderBy = $tableInfo[request('orderBy')].".".request('orderBy');
                 $direction = request('direction');
@@ -51,14 +51,14 @@ class MoviesAPIController extends Controller
             else
             {
                 $orderBy = 'movies.id';
-                $direction = 'desc';
+                $direction = 'asc';
             }
             
             $success['userMovies'] = DB::table('user_movies')
             ->join('users', 'users.id', '=', 'user_movies.userId')
             ->join('movies', 'movies.id', '=', 'user_movies.movieId')
             ->join('formats', 'formats.id', '=', 'user_movies.formatId')
-            ->select('movies.id', 'users.firstName', 'users.lastName','movies.id', 'movies.title', 'movies.length', 'movies.releaseYear', 'user_movies.rating', 'user_movies.formatId')
+            ->select('movies.id', 'users.firstName', 'users.lastName','movies.id', 'movies.title', DB::raw('FLOOR(movies.length/60) as lengthHour') , DB::raw('MOD(movies.length,60) as lengthMinute') ,'movies.releaseYear', 'user_movies.rating', 'user_movies.formatId')
             ->where('users.id', '=', $user->id)
             ->orderBy($orderBy, $direction)
             ->get();
@@ -91,7 +91,8 @@ class MoviesAPIController extends Controller
             $validator = Validator::make($request->all(), 
             [
                 'title' => 'required',
-                'length' => 'required',
+                'lengthHour' => 'required',
+                'lengthMinute' => 'required',
                 'year' => 'required',
                 'rating' => 'required',                    
                 'formatId' => 'required',                    
@@ -114,7 +115,7 @@ class MoviesAPIController extends Controller
                 Log::info('now create movies in MoviesAPIController createUserMovie - '); 
                 $movidId = DB::table('movies')->insertGetId(
                     ['title' => request('title'), 
-                    'length' => request('length'), 
+                    'length' => request('lengthHour') * 60 + request('lengthMinute'), 
                     'releaseYear' => request('year'),                     
                     'createdDate' => $timestamp, 
                     'createdBy' => $user->id,                     
@@ -273,7 +274,7 @@ class MoviesAPIController extends Controller
                         DB::table('movies')
                         ->where('id', request('movieId'))
                         ->update([  'title' => request('title'),
-                                    'length' => request('length'),
+                                    'length' => request('lengthHour') * 60 + request('lengthMinute'),
                                     'releaseYear' => request('year'),
                                     'modifiedDate' => $timestamp,
                                     'modifiedBy' => $user->id

@@ -7,7 +7,21 @@
         margin-bottom: 0;
     }
 
-    @media (max-width: 550px)
+.table > thead > tr > th, .table > thead > tr > td, .table > tbody > tr > th, .table > tbody > tr > td, .table > tfoot > tr > th, .table > tfoot > tr > td
+{
+    padding: 4px;
+}
+
+@media (max-width: 642px)
+{
+    .table > thead > tr > th, .table > thead > tr > td, .table > tbody > tr > th, .table > tbody > tr > td, .table > tfoot > tr > th, .table > tfoot > tr > td
+    {
+        padding: 2px;
+        font-size: 13px;
+    }
+}
+
+    @media (max-width: 585px)
     {
         .toggle-header
         {
@@ -19,7 +33,7 @@
         }
     }  
 
-    @media (max-width: 375px)
+    @media (max-width: 467px)
     {
         .toggle-header2
         {
@@ -54,7 +68,7 @@ th.active .arrow {
   border-bottom: 4px solid #000;
 }
 
-.arrow.dsc {
+.arrow.desc {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
   border-top: 4px solid #000;
@@ -93,11 +107,11 @@ th.active .arrow {
                     <thead>
                         <tr>
                             <th v-show=false>Id</th>
-                            <th @click="getSortedUserMovies('title')"       :class="{ active: sortKey == 'title' }">                                Title <span class="arrow"   :class="sortOrders['title'] > 0 ? 'asc' : sortOrders['title'] < 0 ? 'des' : 'none'"></span></th>
-                            <th @click="getSortedUserMovies('name')"        :class="{ active: sortKey == 'name' }"          class="toggle-header2"> Format <span class="arrow"  :class="sortOrders['name'] > 0 ? 'asc' : sortOrders['name'] < 0 ? 'des' : 'none'"></span></th>
-                            <th @click="getSortedUserMovies('length')"      :class="{ active: sortKey == 'length' }"        class="toggle-header">  Length <span class="arrow"  :class="sortOrders['length'] > 0 ? 'asc' : sortOrders['length'] < 0 ? 'des' : 'none'"></span></th>
-                            <th @click="getSortedUserMovies('releaseYear')" :class="{ active: sortKey == 'releaseYear' }"   class="toggle-header2"> Year <span class="arrow"    :class="sortOrders['releaseYear'] > 0 ? 'asc' : sortOrders['releaseYear'] < 0 ? 'des' : 'none'"></span></th>
-                            <th @click="getSortedUserMovies('rating')"      :class="{ active: sortKey == 'rating' }"        class="toggle-header">  Rating <span class="arrow"  :class="sortOrders['rating'] > 0 ? 'asc' : sortOrders['rating'] < 0 ? 'des' : 'none'"></span></th>
+                            <th @click="getSortedUserMovies('title')" :class="{ active: sortKey == 'title' }">Title <span class="arrow" :class="sortOrders['title'] > 0 ? 'asc' : sortOrders['title'] < 0 ? 'desc' : 'none'"></span></th>
+                            <th @click="getSortedUserMovies('name')" :class="{ active: sortKey == 'name' }" class="toggle-header2">Format<span class="arrow" :class="sortOrders['name'] > 0 ? 'asc' : sortOrders['name'] < 0 ? 'desc' : 'none'"></span></th>
+                            <th @click="getSortedUserMovies('length')" :class="{ active: sortKey == 'length' }"class="toggle-header">Length<span class="arrow" :class="sortOrders['length'] > 0 ? 'asc' : sortOrders['length'] < 0 ? 'desc' : 'none'"></span></th>
+                            <th @click="getSortedUserMovies('releaseYear')" :class="{ active: sortKey == 'releaseYear' }" class="toggle-header2">Year<span class="arrow" :class="sortOrders['releaseYear'] > 0 ? 'asc' : sortOrders['releaseYear'] < 0 ? 'desc' : 'none'"></span></th>
+                            <th @click="getSortedUserMovies('rating')" :class="{ active: sortKey == 'rating' }" class="toggle-header">Rating<span class="arrow" :class="sortOrders['rating'] > 0 ? 'asc' : sortOrders['rating'] < 0 ? 'desc' : 'none'"></span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -121,15 +135,15 @@ th.active .arrow {
 
                             <!-- length -->
                             <td style="vertical-align: middle;" class="toggle-column">
-                                <code>{{ userMovie.length }}</code>
+                                {{ userMovie.lengthHour }} hr {{ userMovie.lengthMinute }} m
                             </td>
                             <!-- Year -->
                             <td style="vertical-align: middle;" class="toggle-column2">
-                                <code>{{ userMovie.releaseYear }}</code>
+                                {{ userMovie.releaseYear }}
                             </td>
                             <!-- Rating -->
                             <td style="vertical-align: middle;" class="toggle-column">
-                                <code>{{ userMovie.rating }}</code>
+                                {{ userMovie.rating }}
                             </td>
 
                             <!-- Edit Button -->
@@ -213,11 +227,10 @@ th.active .arrow {
                                 <label class="col-md-3 control-label">Length</label>
 
                                 <div class="col-md-7">
-                                    <input type="text" class="form-control" name="length"
-                                                    @keyup.enter="store" v-model="createForm.length">
-
+                                    <input type="text" class="form-control" name="lengthHour" @keyup.enter="store" v-model="createForm.lengthHour">h  
+                                    <input type="text" class="form-control" name="lengthMinute" @keyup.enter="store" v-model="createForm.lengthMinute">min 
                                     <span class="help-block">
-                                        The length of the movie in minutes.
+                                        The length of the movie.
                                     </span>
                                 </div>
                             </div>
@@ -339,12 +352,12 @@ th.active .arrow {
                             <div class="form-group">
                                 <label class="col-md-3 control-label">Length</label>
 
-                                <div class="col-md-7">
-                                    <input type="text" class="form-control" name="length"
-                                                    @keyup.enter="store" v-model="editForm.length">
+                                <div class="col-md-7">                                    
+                                    <input type="text" class="form-control" name="lengthHour" @keyup.enter="store" v-model="editForm.lengthHour">h  
+                                    <input type="text" class="form-control" name="lengthMinute" @keyup.enter="store" v-model="editForm.lengthMinute">min
 
                                     <span class="help-block">
-                                        The length of the movie in minutes.
+                                        The length of the movie.
                                     </span>
                                 </div>
                             </div>
@@ -422,6 +435,8 @@ th.active .arrow {
                     title: '', 
                     formatId: '', 
                     length: '',
+                    lengthHour: '',
+                    lengthMinute: '',
                     year: '',
                     rating: ''
                 },
@@ -431,6 +446,8 @@ th.active .arrow {
                     title: '',
                     formatId: '', 
                     length: '',
+                    lengthHour: '',
+                    lengthMinute: '',
                     year: '',
                     rating: ''
                 }, 
@@ -474,7 +491,7 @@ th.active .arrow {
             /**
              * Get all of the movies for the user.
              */
-            getUserMovies(orderBy) 
+            getUserMovies() 
             {
                 axios.get('/api/get-formats')
                         .then(response => 
@@ -497,11 +514,10 @@ th.active .arrow {
                         });
             },
 
-            getSortedUserMovies(orderBy) 
-            {
-                //TODO: fix direction...it is only going asc and none
-                this.sortOrders[orderBy] == 0 ? this.sortOrders[orderBy] = -1 : this.sortOrders[orderBy] < 0 ? this.sortOrders[orderBy] = 1 : this.sortOrders[orderBy] = 0;
-                var direction = this.sortOrders[orderBy] > 0 ? 'asc' : this.sortOrders[orderBy] < 0 ? 'dsc' : 'none';
+            getSortedUserMovies(orderBy) //TODO: look into using just getUserMovies
+            {                
+                this.sortOrders[orderBy] == 0 ? this.sortOrders[orderBy] = 1 : this.sortOrders[orderBy] > 0 ? this.sortOrders[orderBy] = -1 : this.sortOrders[orderBy] = 0;
+                var direction = this.sortOrders[orderBy] > 0 ? 'asc' : this.sortOrders[orderBy] < 0 ? 'desc' : 'none';
                 axios.get('/api/get-user-movies?orderBy='+orderBy+"&direction="+direction)
                         .then(response => 
                         {
@@ -517,7 +533,7 @@ th.active .arrow {
                                     this.sortOrders[temp[i]] = 0        
                                 } 
                                 
-                                this.sortOrders[response.data.success.sorting['orderBy']] = response.data.success.sorting['direction'] == 'asc' ? 1 : -1; //TODO put in none
+                                this.sortOrders[response.data.success.sorting['orderBy']] = response.data.success.sorting['direction'] == 'asc' ? 1 : response.data.success.sorting['direction'] == 'desc' ? -1 : 0; 
 
                                 this.sortKey = response.data.success.sorting['orderBy'];
                             }  
@@ -536,7 +552,9 @@ th.active .arrow {
             /**
              * Create a new movie for the user.
              */
-            store() {
+            store() 
+            {
+                this.createForm.length =  this.createForm.lengthHour * 60 +  this.createForm.lengthMinute;
                 this.persistMovie(
                     'post', 'api/create-movie',
                     this.createForm, '#modal-create-movie'
@@ -553,9 +571,11 @@ th.active .arrow {
                 this.editForm.movieId = userMovie.id;
                 this.editForm.title = userMovie.title;
                 this.editForm.formatId = userMovie.formatId;
-                this.editForm.length = userMovie.length;
+                this.editForm.lengthHour = userMovie.lengthHour;
+                this.editForm.lengthMinute = userMovie.lengthMinute;
                 this.editForm.year = userMovie.releaseYear;
                 this.editForm.rating = userMovie.rating;
+                this.editForm.length = '';
 
                 $('#modal-edit-movie').modal('show');
             },
@@ -563,7 +583,9 @@ th.active .arrow {
             /**
              * Update the movie being edited.
              */
-            update() {
+            update() 
+            {
+                this.editForm.length = this.editForm.lengthHour * 60 + this.editForm.lengthMinute;
                 this.persistMovie(
                     'put', '/api/update-movie/' + this.editForm.movieId,
                     this.editForm, '#modal-edit-movie'
@@ -582,10 +604,12 @@ th.active .arrow {
 
                         form.title = '';
                         form.formatId = '';
-                        form.Length = '';
+                        form.lengthHour = '';
+                        form.lengthMinute = '';
                         form.year = '';
                         form.rating = '';
                         form.errors = [];
+                        form.length = '';
 
                         $(modal).modal('hide');
                     })
