@@ -29,7 +29,42 @@
         {
             display:none;
         }
-    }    
+    }   
+
+th.active {
+  color: #000;
+}
+
+th.active .arrow {
+  opacity: 1;
+}
+
+.arrow {
+  display: inline-block;
+  vertical-align: middle;
+  width: 0;
+  height: 0;
+  margin-left: 5px;
+  opacity: 0.66;
+}
+
+.arrow.asc {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 4px solid #000;
+}
+
+.arrow.dsc {
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #000;
+} 
+
+.arrow.none {
+  border-left: 0px solid transparent;
+  border-right: 0px solid transparent;
+  border-top: 0px solid #000;
+} 
 
 </style>
 
@@ -58,11 +93,11 @@
                     <thead>
                         <tr>
                             <th v-show=false>Id</th>
-                            <th>Title</th>
-                            <th class="toggle-header2">Format</th>
-                            <th class="toggle-header">Length</th>
-                            <th class="toggle-header2">Year</th>
-                            <th class="toggle-header">Rating</th>
+                            <th @click="getSortedUserMovies('title')"       :class="{ active: sortKey == 'title' }">                                Title <span class="arrow"   :class="sortOrders['title'] > 0 ? 'asc' : sortOrders['title'] < 0 ? 'des' : 'none'"></span></th>
+                            <th @click="getSortedUserMovies('name')"        :class="{ active: sortKey == 'name' }"          class="toggle-header2"> Format <span class="arrow"  :class="sortOrders['name'] > 0 ? 'asc' : sortOrders['name'] < 0 ? 'des' : 'none'"></span></th>
+                            <th @click="getSortedUserMovies('length')"      :class="{ active: sortKey == 'length' }"        class="toggle-header">  Length <span class="arrow"  :class="sortOrders['length'] > 0 ? 'asc' : sortOrders['length'] < 0 ? 'des' : 'none'"></span></th>
+                            <th @click="getSortedUserMovies('releaseYear')" :class="{ active: sortKey == 'releaseYear' }"   class="toggle-header2"> Year <span class="arrow"    :class="sortOrders['releaseYear'] > 0 ? 'asc' : sortOrders['releaseYear'] < 0 ? 'des' : 'none'"></span></th>
+                            <th @click="getSortedUserMovies('rating')"      :class="{ active: sortKey == 'rating' }"        class="toggle-header">  Rating <span class="arrow"  :class="sortOrders['rating'] > 0 ? 'asc' : sortOrders['rating'] < 0 ? 'des' : 'none'"></span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -398,7 +433,11 @@
                     length: '',
                     year: '',
                     rating: ''
-                }
+                }, 
+
+                sortOrders : {},
+
+                sortKey : '',
             };
         },
 
@@ -435,7 +474,8 @@
             /**
              * Get all of the movies for the user.
              */
-            getUserMovies() {
+            getUserMovies(orderBy) 
+            {
                 axios.get('/api/get-formats')
                         .then(response => 
                         {
@@ -444,8 +484,46 @@
                                     .then(response => 
                                     {
                                         this.userMovies = response.data.success.userMovies;
+
+                                        if(this.userMovies[0] !== null)
+                                        {
+                                            var temp = Object.keys(this.userMovies[0]);
+                                            for (var i=0; i<temp.length; i++) 
+                                            {
+                                                this.sortOrders[temp[i]] = 0;
+                                            }   
+                                        }                                          
                                     });
                         });
+            },
+
+            getSortedUserMovies(orderBy) 
+            {
+                //TODO: fix direction...it is only going asc and none
+                this.sortOrders[orderBy] == 0 ? this.sortOrders[orderBy] = -1 : this.sortOrders[orderBy] < 0 ? this.sortOrders[orderBy] = 1 : this.sortOrders[orderBy] = 0;
+                var direction = this.sortOrders[orderBy] > 0 ? 'asc' : this.sortOrders[orderBy] < 0 ? 'dsc' : 'none';
+                axios.get('/api/get-user-movies?orderBy='+orderBy+"&direction="+direction)
+                        .then(response => 
+                        {
+                            this.userMovies = response.data.success.userMovies;
+                            
+                            if(this.userMovies[0] !== null)
+                            {
+                                
+                                //reset sortOrders array
+                                var temp = Object.keys(this.sortOrders);
+                                for (var i=0; i<temp.length; i++)                                
+                                {
+                                    this.sortOrders[temp[i]] = 0        
+                                } 
+                                
+                                this.sortOrders[response.data.success.sorting['orderBy']] = response.data.success.sorting['direction'] == 'asc' ? 1 : -1; //TODO put in none
+
+                                this.sortKey = response.data.success.sorting['orderBy'];
+                            }  
+                            
+                        });
+                       
             },
 
             /**

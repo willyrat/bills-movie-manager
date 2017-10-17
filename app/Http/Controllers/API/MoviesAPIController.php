@@ -34,14 +34,36 @@ class MoviesAPIController extends Controller
             Log::info('in MoviesAPIController getUserMovies - Auth passed');
 
             $user = Auth::user();
+
+            $tableInfo = array();
+
+            $tableInfo['rating'] = 'user_movies';
+            $tableInfo['name'] = 'formats';
+            $tableInfo['length'] = 'movies';
+            $tableInfo['title'] = 'movies';
+            $tableInfo['releaseYear'] = 'movies';
+
+            if(!is_null(request('orderBy')) && !is_null('direction'))
+            {                
+                $orderBy = $tableInfo[request('orderBy')].".".request('orderBy');
+                $direction = request('direction');
+            }
+            else
+            {
+                $orderBy = 'movies.id';
+                $direction = 'desc';
+            }
             
             $success['userMovies'] = DB::table('user_movies')
             ->join('users', 'users.id', '=', 'user_movies.userId')
             ->join('movies', 'movies.id', '=', 'user_movies.movieId')
+            ->join('formats', 'formats.id', '=', 'user_movies.formatId')
             ->select('movies.id', 'users.firstName', 'users.lastName','movies.id', 'movies.title', 'movies.length', 'movies.releaseYear', 'user_movies.rating', 'user_movies.formatId')
             ->where('users.id', '=', $user->id)
-            ->get();;
-
+            ->orderBy($orderBy, $direction)
+            ->get();
+            
+            $success['sorting'] = array('orderBy' => substr($orderBy, strpos($orderBy, '.')+1, strlen($orderBy)) , 'direction' => $direction);
             
             return response()->json(['success' => $success], $this->successStatus);                
         }

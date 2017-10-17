@@ -37,6 +37,7 @@ Route::group(['middleware' => 'auth:api'], function()
     Route::post('get-details', 'API\PassportController@getDetails');
 
     Route::get('get-user-movies', 'API\MoviesAPIController@getUserMovies');
+
     Route::get('get-formats', 'API\MoviesAPIController@getMovieFormats');
     Route::post('create-movie', 'API\MoviesAPIController@createUserMovie');    
     Route::put('update-movie/{id}', 'API\MoviesAPIController@updateUserMovie');

@@ -44690,7 +44690,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n    cursor: pointer;\n}\n.m-b-none[data-v-0fec7cb6] {\n    margin-bottom: 0;\n}\n@media (max-width: 550px)\n{\n.toggle-header[data-v-0fec7cb6]\n    {\n        display:none;\n}\n.toggle-column[data-v-0fec7cb6]\n    {\n        display:none;\n}\n}\n@media (max-width: 375px)\n{\n.toggle-header2[data-v-0fec7cb6]\n    {\n        display:none;\n}\n.toggle-column2[data-v-0fec7cb6]\n    {\n        display:none;\n}\n}    \n\n", ""]);
+exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n        cursor: pointer;\n}\n.m-b-none[data-v-0fec7cb6] {\n        margin-bottom: 0;\n}\n@media (max-width: 550px)\n    {\n.toggle-header[data-v-0fec7cb6]\n        {\n            display:none;\n}\n.toggle-column[data-v-0fec7cb6]\n        {\n            display:none;\n}\n}\n@media (max-width: 375px)\n    {\n.toggle-header2[data-v-0fec7cb6]\n        {\n            display:none;\n}\n.toggle-column2[data-v-0fec7cb6]\n        {\n            display:none;\n}\n}\nth.active[data-v-0fec7cb6] {\n  color: #000;\n}\nth.active .arrow[data-v-0fec7cb6] {\n  opacity: 1;\n}\n.arrow[data-v-0fec7cb6] {\n  display: inline-block;\n  vertical-align: middle;\n  width: 0;\n  height: 0;\n  margin-left: 5px;\n  opacity: 0.66;\n}\n.arrow.asc[data-v-0fec7cb6] {\n  border-left: 4px solid transparent;\n  border-right: 4px solid transparent;\n  border-bottom: 4px solid #000;\n}\n.arrow.dsc[data-v-0fec7cb6] {\n  border-left: 4px solid transparent;\n  border-right: 4px solid transparent;\n  border-top: 4px solid #000;\n}\n.arrow.none[data-v-0fec7cb6] {\n  border-left: 0px solid transparent;\n  border-right: 0px solid transparent;\n  border-top: 0px solid #000;\n} \n\n", ""]);
 
 // exports
 
@@ -44703,6 +44703,41 @@ exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n    cursor: pointer;
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -45103,7 +45138,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 length: '',
                 year: '',
                 rating: ''
-            }
+            },
+
+            sortOrders: {},
+
+            sortKey: ''
         };
     },
 
@@ -45144,14 +45183,44 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         /**
          * Get all of the movies for the user.
          */
-        getUserMovies: function getUserMovies() {
+        getUserMovies: function getUserMovies(orderBy) {
             var _this = this;
 
             axios.get('/api/get-formats').then(function (response) {
                 _this.formats = response.data.success.formats;
                 axios.get('/api/get-user-movies').then(function (response) {
                     _this.userMovies = response.data.success.userMovies;
+
+                    if (_this.userMovies[0] !== null) {
+                        var temp = Object.keys(_this.userMovies[0]);
+                        for (var i = 0; i < temp.length; i++) {
+                            _this.sortOrders[temp[i]] = 0;
+                        }
+                    }
                 });
+            });
+        },
+        getSortedUserMovies: function getSortedUserMovies(orderBy) {
+            var _this2 = this;
+
+            //TODO: fix direction...it is only going asc and none
+            this.sortOrders[orderBy] == 0 ? this.sortOrders[orderBy] = -1 : this.sortOrders[orderBy] < 0 ? this.sortOrders[orderBy] = 1 : this.sortOrders[orderBy] = 0;
+            var direction = this.sortOrders[orderBy] > 0 ? 'asc' : this.sortOrders[orderBy] < 0 ? 'dsc' : 'none';
+            axios.get('/api/get-user-movies?orderBy=' + orderBy + "&direction=" + direction).then(function (response) {
+                _this2.userMovies = response.data.success.userMovies;
+
+                if (_this2.userMovies[0] !== null) {
+
+                    //reset sortOrders array
+                    var temp = Object.keys(_this2.sortOrders);
+                    for (var i = 0; i < temp.length; i++) {
+                        _this2.sortOrders[temp[i]] = 0;
+                    }
+
+                    _this2.sortOrders[response.data.success.sorting['orderBy']] = response.data.success.sorting['direction'] == 'asc' ? 1 : -1; //TODO put in none
+
+                    _this2.sortKey = response.data.success.sorting['orderBy'];
+                }
             });
         },
 
@@ -45199,12 +45268,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * Persist the movie to storage using the given form.
          */
         persistMovie: function persistMovie(method, uri, form, modal) {
-            var _this2 = this;
+            var _this3 = this;
 
             form.errors = [];
 
             axios[method](uri, form).then(function (response) {
-                _this2.getUserMovies();
+                _this3.getUserMovies();
 
                 form.title = '';
                 form.formatId = '';
@@ -45228,11 +45297,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * Destroy the given movie.
          */
         destroy: function destroy(userMovie) {
-            var _this3 = this;
+            var _this4 = this;
 
             axios.delete('/api/delete-movie/' + userMovie.id) //userMovie.id is movieId
             .then(function (response) {
-                _this3.getUserMovies();
+                _this4.getUserMovies();
             });
         }
     }
@@ -45303,19 +45372,119 @@ var render = function() {
                     [_vm._v("Id")]
                   ),
                   _vm._v(" "),
-                  _c("th", [_vm._v("Title")]),
+                  _c(
+                    "th",
+                    {
+                      class: { active: _vm.sortKey == "title" },
+                      on: {
+                        click: function($event) {
+                          _vm.getSortedUserMovies("title")
+                        }
+                      }
+                    },
+                    [
+                      _vm._v("                                Title "),
+                      _c("span", {
+                        staticClass: "arrow",
+                        class:
+                          _vm.sortOrders["title"] > 0
+                            ? "asc"
+                            : _vm.sortOrders["title"] < 0 ? "des" : "none"
+                      })
+                    ]
+                  ),
                   _vm._v(" "),
-                  _c("th", { staticClass: "toggle-header2" }, [
-                    _vm._v("Format")
-                  ]),
+                  _c(
+                    "th",
+                    {
+                      staticClass: "toggle-header2",
+                      class: { active: _vm.sortKey == "name" },
+                      on: {
+                        click: function($event) {
+                          _vm.getSortedUserMovies("name")
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(" Format "),
+                      _c("span", {
+                        staticClass: "arrow",
+                        class:
+                          _vm.sortOrders["name"] > 0
+                            ? "asc"
+                            : _vm.sortOrders["name"] < 0 ? "des" : "none"
+                      })
+                    ]
+                  ),
                   _vm._v(" "),
-                  _c("th", { staticClass: "toggle-header" }, [
-                    _vm._v("Length")
-                  ]),
+                  _c(
+                    "th",
+                    {
+                      staticClass: "toggle-header",
+                      class: { active: _vm.sortKey == "length" },
+                      on: {
+                        click: function($event) {
+                          _vm.getSortedUserMovies("length")
+                        }
+                      }
+                    },
+                    [
+                      _vm._v("  Length "),
+                      _c("span", {
+                        staticClass: "arrow",
+                        class:
+                          _vm.sortOrders["length"] > 0
+                            ? "asc"
+                            : _vm.sortOrders["length"] < 0 ? "des" : "none"
+                      })
+                    ]
+                  ),
                   _vm._v(" "),
-                  _c("th", { staticClass: "toggle-header2" }, [_vm._v("Year")]),
+                  _c(
+                    "th",
+                    {
+                      staticClass: "toggle-header2",
+                      class: { active: _vm.sortKey == "releaseYear" },
+                      on: {
+                        click: function($event) {
+                          _vm.getSortedUserMovies("releaseYear")
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(" Year "),
+                      _c("span", {
+                        staticClass: "arrow",
+                        class:
+                          _vm.sortOrders["releaseYear"] > 0
+                            ? "asc"
+                            : _vm.sortOrders["releaseYear"] < 0 ? "des" : "none"
+                      })
+                    ]
+                  ),
                   _vm._v(" "),
-                  _c("th", { staticClass: "toggle-header" }, [_vm._v("Rating")])
+                  _c(
+                    "th",
+                    {
+                      staticClass: "toggle-header",
+                      class: { active: _vm.sortKey == "rating" },
+                      on: {
+                        click: function($event) {
+                          _vm.getSortedUserMovies("rating")
+                        }
+                      }
+                    },
+                    [
+                      _vm._v("  Rating "),
+                      _c("span", {
+                        staticClass: "arrow",
+                        class:
+                          _vm.sortOrders["rating"] > 0
+                            ? "asc"
+                            : _vm.sortOrders["rating"] < 0 ? "des" : "none"
+                      })
+                    ]
+                  )
                 ])
               ]),
               _vm._v(" "),
