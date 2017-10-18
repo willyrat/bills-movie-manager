@@ -517,24 +517,31 @@ th.active .arrow {
             },
             incorrecCreatetLength() 
             { 
-                //  time, minutes, >0 and <500)              
-
+                //  time, minutes, >0 and <500)   
+                var hour = 0;
+                var minute = 0;
                 if(this.createForm.lengthHour.length > 0)
                 {
-                    if(isNaN(this.createForm.lengthHour) || isNaN(this.createForm.lengthMinute))
+                    if(isNaN(this.createForm.lengthHour) )
                     {
                         return true;
                     }
+                    hour = parseInt(this.createForm.lengthHour)
+                }
 
-                    this.createForm.length =  parseInt(this.createForm.lengthHour) * 60 +  parseInt(this.createForm.lengthMinute);
-                }
-                else
+                if(this.createForm.lengthMinute.length > 0)
                 {
-                    this.createForm.length = parseInt(this.createForm.lengthMinute);
+                    if(isNaN(this.createForm.lengthMinute) )
+                    {
+                        return true;
+                    }
+                    minute = parseInt(this.createForm.lengthMinute)
                 }
+
+                this.createForm.length =  hour * 60 + minute;
 
                 //Check to see if length is less than 1 or greater than 500 minutes
-                if( isNaN(parseInt(this.createForm.length)) || this.createForm.length < 1 ||  this.createForm.length > 500 )
+                if( isNaN(this.createForm.length) || this.createForm.length < 1 ||  this.createForm.length > 500 )
                 {
                     return true;
                 }               
@@ -543,24 +550,31 @@ th.active .arrow {
             },
             incorrecEditLength() 
             { 
-                //  time, minutes, >0 and <500)              
-
+                //  time, minutes, >0 and <500)   
+                var hour = 0;
+                var minute = 0;
                 if(this.editForm.lengthHour.length > 0)
                 {
-                    if(isNaN(this.editForm.lengthHour) || isNaN(this.editForm.lengthMinute))
+                    if(isNaN(this.editForm.lengthHour) )
                     {
                         return true;
                     }
+                    hour = parseInt(this.editForm.lengthHour)
+                }
 
-                    this.editForm.length =  parseInt(this.editForm.lengthHour) * 60 +  parseInt(this.editForm.lengthMinute);
-                }
-                else
+                if(this.editForm.lengthMinute.length > 0)
                 {
-                    this.editForm.length = parseInt(this.editForm.lengthMinute);
+                    if(isNaN(this.editForm.lengthMinute) )
+                    {
+                        return true;
+                    }
+                    minute = parseInt(this.editForm.lengthMinute)
                 }
+
+                this.editForm.length =  hour * 60 + minute;
 
                 //Check to see if length is less than 1 or greater than 500 minutes
-                if( isNaN(parseInt(this.editForm.length)) || this.editForm.length < 1 ||  this.editForm.length > 500 )
+                if( isNaN(this.editForm.length) || this.editForm.length < 1 ||  this.editForm.length > 500 )
                 {
                     return true;
                 }               
