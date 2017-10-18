@@ -197,7 +197,7 @@ th.active .arrow {
                         <!-- Create Movie Form -->
                         <form class="form-horizontal" role="form">
                             <!-- Title -->
-                            <div class="form-group">
+                            <div class="form-group" v-bind:class="{ 'has-error': submition && incorrectCreateTitle }">                            
                                 <label class="col-md-3 control-label">Title</label>
 
                                 <div class="col-md-7">
@@ -207,11 +207,12 @@ th.active .arrow {
                                     <span class="help-block">
                                         Full title of movie.
                                     </span>
+                                    <div class="help-block" v-if="submition && incorrectCreateTitle">This field is required and max length is 50.</div>
                                 </div>
                             </div>
                             
                             <!-- Format -->
-                            <div class="form-group">
+                            <div class="form-group" v-bind:class="{ 'has-error': submition && incorrectCreateFormat }">
                                 <label class="col-md-3 control-label">Format</label>
 
                                 <div class="col-md-7">
@@ -224,11 +225,12 @@ th.active .arrow {
                                     <span class="help-block">
                                         Format of your movie.
                                     </span>
+                                    <div class="help-block" v-if="submition && incorrectCreateFormat">This field is required.</div>
                                 </div>
                             </div>
                             
                             <!-- Length -->
-                            <div class="form-group">
+                            <div class="form-group" v-bind:class="{ 'has-error': submition && incorrecCreatetLength }">
                                 <label class="col-md-3 control-label">Length</label>
 
                                 <div class="col-md-7">
@@ -237,11 +239,12 @@ th.active .arrow {
                                     <span class="help-block">
                                         The length of the movie.
                                     </span>
+                                    <div class="help-block" v-if="submition && incorrecCreatetLength">These fields combined must be between 1 and 500 minutes.</div>
                                 </div>
                             </div>
 
                             <!-- Year -->
-                            <div class="form-group">
+                            <div class="form-group" v-bind:class="{ 'has-error': submition && incorrecCreatetYear }">
                                 <label class="col-md-3 control-label">Year</label>
 
                                 <div class="col-md-7">
@@ -251,6 +254,7 @@ th.active .arrow {
                                     <span class="help-block">
                                         Year movie was released.
                                     </span>
+                                    <div class="help-block" v-if="submition && incorrecCreatetYear">This field must be betwee 1800 and 2100.</div>
                                 </div>
                             </div>
 
@@ -323,7 +327,7 @@ th.active .arrow {
                         <!-- Edit Movie Form -->
                         <form class="form-horizontal" role="form">                            
                             <!-- Title -->
-                            <div class="form-group">
+                            <div class="form-group" v-bind:class="{ 'has-error': submition && incorrectEditTitle }">
                                 <label class="col-md-3 control-label">Name</label>
 
                                 <div class="col-md-7">
@@ -333,11 +337,12 @@ th.active .arrow {
                                     <span class="help-block">
                                         Full title of movie.
                                     </span>
+                                    <div class="help-block" v-if="submition && incorrectEditTitle">This field is required and max length is 50.</div>
                                 </div>
                             </div>
 
                             <!-- Format -->
-                            <div class="form-group">
+                            <div class="form-group" v-bind:class="{ 'has-error': submition && incorrectEditFormat }">
                                 <label class="col-md-3 control-label">Format</label>
 
                                 <div class="col-md-7">
@@ -350,11 +355,12 @@ th.active .arrow {
                                     <span class="help-block">
                                         Format of your movie.
                                     </span>
+                                    <div class="help-block" v-if="submition && incorrectEditFormat">This field is required.</div>
                                 </div>
                             </div>
 
                             <!-- Length -->
-                            <div class="form-group">
+                            <div class="form-group" v-bind:class="{ 'has-error': submition && incorrecEditLength }">
                                 <label class="col-md-3 control-label">Length</label>
 
                                 <div class="col-md-7">                                    
@@ -364,11 +370,12 @@ th.active .arrow {
                                     <span class="help-block">
                                         The length of the movie.
                                     </span>
+                                    <div class="help-block" v-if="submition && incorrecEditLength">These fields combined must be between 1 and 500 minutes.</div>
                                 </div>
                             </div>
 
                             <!-- Year -->
-                            <div class="form-group">
+                            <div class="form-group" v-bind:class="{ 'has-error': submition && incorrecEditYear }">
                                 <label class="col-md-3 control-label">Year</label>
 
                                 <div class="col-md-7">
@@ -378,6 +385,7 @@ th.active .arrow {
                                     <span class="help-block">
                                         Year movie was released.
                                     </span>
+                                    <div class="help-block" v-if="submition && incorrecEditYear">This field must be betwee 1800 and 2100.</div>
                                 </div>
                             </div>
 
@@ -443,7 +451,7 @@ th.active .arrow {
                     lengthHour: '',
                     lengthMinute: '',
                     year: '',
-                    rating: ''
+                    rating: '',                    
                 },
 
                 editForm: {
@@ -454,12 +462,14 @@ th.active .arrow {
                     lengthHour: '',
                     lengthMinute: '',
                     year: '',
-                    rating: ''
+                    rating: '',                    
                 }, 
 
                 sortOrders : {},
 
                 sortKey : '',
+
+                submition: false,
             };
         },
 
@@ -477,7 +487,142 @@ th.active .arrow {
             this.prepareComponent();
         },
 
-        methods: {
+        computed: 
+        {
+            incorrectCreateTitle() 
+            { 
+                if(this.createForm.title === '' || this.createForm.title.length > 50)
+                {
+                    return true;
+                } 
+
+                return false;
+            },
+            incorrectEditTitle() 
+            { 
+                if(this.editForm.title === '' || this.editForm.title.length > 50)
+                {
+                    return true;
+                } 
+
+                return false;
+            },
+            incorrectCreateFormat() 
+            { 
+                return this.createForm.formatId === '' 
+            },
+            incorrectEditFormat() 
+            { 
+                return this.editForm.formatId === '' 
+            },
+            incorrecCreatetLength() 
+            { 
+                //  time, minutes, >0 and <500)              
+
+                if(this.createForm.lengthHour.length > 0)
+                {
+                    if(isNaN(this.createForm.lengthHour) || isNaN(this.createForm.lengthMinute))
+                    {
+                        return true;
+                    }
+
+                    this.createForm.length =  parseInt(this.createForm.lengthHour) * 60 +  parseInt(this.createForm.lengthMinute);
+                }
+                else
+                {
+                    this.createForm.length = parseInt(this.createForm.lengthMinute);
+                }
+
+                //Check to see if length is less than 1 or greater than 500 minutes
+                if( isNaN(parseInt(this.createForm.length)) || this.createForm.length < 1 ||  this.createForm.length > 500 )
+                {
+                    return true;
+                }               
+
+                return false;
+            },
+            incorrecEditLength() 
+            { 
+                //  time, minutes, >0 and <500)              
+
+                if(this.editForm.lengthHour.length > 0)
+                {
+                    if(isNaN(this.editForm.lengthHour) || isNaN(this.editForm.lengthMinute))
+                    {
+                        return true;
+                    }
+
+                    this.editForm.length =  parseInt(this.editForm.lengthHour) * 60 +  parseInt(this.editForm.lengthMinute);
+                }
+                else
+                {
+                    this.editForm.length = parseInt(this.editForm.lengthMinute);
+                }
+
+                //Check to see if length is less than 1 or greater than 500 minutes
+                if( isNaN(parseInt(this.editForm.length)) || this.editForm.length < 1 ||  this.editForm.length > 500 )
+                {
+                    return true;
+                }               
+
+                return false;
+            },
+            incorrecCreatetYear() 
+            { 
+                //integer, >1800 and < 2100)                
+                if(isNaN(this.createForm.year) || this.createForm.year < 1800  || this.createForm.year > 2100)
+                {
+                    return true;
+                } 
+
+                return false;
+            },
+            incorrecEditYear() 
+            { 
+                //integer, >1800 and < 2100)                
+                if(isNaN(this.editForm.year) || this.editForm.year < 1800  || this.editForm.year > 2100)
+                {
+                    return true;
+                } 
+
+                return false;
+            },
+        },
+    
+        methods: 
+        {
+
+            isEmail() 
+            {
+
+            },
+
+            validateCreateForm() 
+            {
+                this.submition = true;
+
+                if(this.incorrectCreateTitle || this.incorrectCreateFormat || this.incorrecCreatetLength || this.incorrecCreatetYear)
+                {
+                    return false;
+                }
+
+                return true;
+    
+            },
+
+            validateEditForm() 
+            {
+                this.submition = true;
+
+                if(this.incorrectEditTitle || this.incorrectEditFormat || this.incorrecEditLength || this.incorrecEditYear)
+                {
+                    return false;
+                }
+
+                return true;
+    
+            },
+
             /**
              * Prepare the component.
              */
@@ -559,11 +704,15 @@ th.active .arrow {
              */
             store() 
             {
-                this.createForm.length =  this.createForm.lengthHour * 60 +  this.createForm.lengthMinute;
-                this.persistMovie(
-                    'post', 'api/create-movie',
-                    this.createForm, '#modal-create-movie'
-                );
+                //this.createForm.length =  parseInt(this.createForm.lengthHour) * 60 +  parseInt(this.createForm.lengthMinute);
+
+                if(this.validateCreateForm())
+                {
+                    this.persistMovie(
+                        'post', 'api/create-movie',
+                        this.createForm, '#modal-create-movie'
+                    );
+                }
             },
 
 
@@ -590,11 +739,15 @@ th.active .arrow {
              */
             update() 
             {
-                this.editForm.length = this.editForm.lengthHour * 60 + this.editForm.lengthMinute;
-                this.persistMovie(
-                    'put', '/api/update-movie/' + this.editForm.movieId,
-                    this.editForm, '#modal-edit-movie'
-                );
+                this.editForm.length = parseInt(this.editForm.lengthHour) * 60 + parseInt(this.editForm.lengthMinute);
+                
+                if(this.validateEditForm())
+                {
+                    this.persistMovie(
+                        'put', '/api/update-movie/' + this.editForm.movieId,
+                        this.editForm, '#modal-edit-movie'
+                    );
+                }
             },
 
             /**
@@ -604,7 +757,10 @@ th.active .arrow {
                 form.errors = [];
 
                 axios[method](uri, form)
-                    .then(response => {
+                    .then(response => 
+                    {
+                        this.submition = false;
+
                         this.getUserMovies();
 
                         form.title = '';
@@ -625,6 +781,7 @@ th.active .arrow {
                             form.errors = ['Something went wrong. Please try again.'];
                         }
                     });
+            
             },
 
             /**

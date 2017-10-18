@@ -90,9 +90,8 @@ class MoviesAPIController extends Controller
             
             $validator = Validator::make($request->all(), 
             [
-                'title' => 'required',
-                'lengthHour' => 'required',
-                'lengthMinute' => 'required',
+                'title' => 'required',                
+                'length' => 'required',
                 'year' => 'required',                               
                 'formatId' => 'required',                    
             ]);                

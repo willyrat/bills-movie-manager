@@ -45129,6 +45129,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     /*
@@ -45164,7 +45172,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             sortOrders: {},
 
-            sortKey: ''
+            sortKey: '',
+
+            submition: false
         };
     },
 
@@ -45185,7 +45195,107 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     },
 
 
+    computed: {
+        incorrectCreateTitle: function incorrectCreateTitle() {
+            if (this.createForm.title === '' || this.createForm.title.length > 50) {
+                return true;
+            }
+
+            return false;
+        },
+        incorrectEditTitle: function incorrectEditTitle() {
+            if (this.editForm.title === '' || this.editForm.title.length > 50) {
+                return true;
+            }
+
+            return false;
+        },
+        incorrectCreateFormat: function incorrectCreateFormat() {
+            return this.createForm.formatId === '';
+        },
+        incorrectEditFormat: function incorrectEditFormat() {
+            return this.editForm.formatId === '';
+        },
+        incorrecCreatetLength: function incorrecCreatetLength() {
+            //  time, minutes, >0 and <500)              
+
+            if (this.createForm.lengthHour.length > 0) {
+                if (isNaN(this.createForm.lengthHour) || isNaN(this.createForm.lengthMinute)) {
+                    return true;
+                }
+
+                this.createForm.length = parseInt(this.createForm.lengthHour) * 60 + parseInt(this.createForm.lengthMinute);
+            } else {
+                this.createForm.length = parseInt(this.createForm.lengthMinute);
+            }
+
+            //Check to see if length is less than 1 or greater than 500 minutes
+            if (isNaN(parseInt(this.createForm.length)) || this.createForm.length < 1 || this.createForm.length > 500) {
+                return true;
+            }
+
+            return false;
+        },
+        incorrecEditLength: function incorrecEditLength() {
+            //  time, minutes, >0 and <500)              
+
+            if (this.editForm.lengthHour.length > 0) {
+                if (isNaN(this.editForm.lengthHour) || isNaN(this.editForm.lengthMinute)) {
+                    return true;
+                }
+
+                this.editForm.length = parseInt(this.editForm.lengthHour) * 60 + parseInt(this.editForm.lengthMinute);
+            } else {
+                this.editForm.length = parseInt(this.editForm.lengthMinute);
+            }
+
+            //Check to see if length is less than 1 or greater than 500 minutes
+            if (isNaN(parseInt(this.editForm.length)) || this.editForm.length < 1 || this.editForm.length > 500) {
+                return true;
+            }
+
+            return false;
+        },
+        incorrecCreatetYear: function incorrecCreatetYear() {
+            //integer, >1800 and < 2100)                
+            if (isNaN(this.createForm.year) || this.createForm.year < 1800 || this.createForm.year > 2100) {
+                return true;
+            }
+
+            return false;
+        },
+        incorrecEditYear: function incorrecEditYear() {
+            //integer, >1800 and < 2100)                
+            if (isNaN(this.editForm.year) || this.editForm.year < 1800 || this.editForm.year > 2100) {
+                return true;
+            }
+
+            return false;
+        }
+    },
+
     methods: {
+        isEmail: function isEmail() {},
+        validateCreateForm: function validateCreateForm() {
+            this.submition = true;
+
+            if (this.incorrectCreateTitle || this.incorrectCreateFormat || this.incorrecCreatetLength || this.incorrecCreatetYear) {
+                return false;
+            }
+
+            return true;
+        },
+        validateEditForm: function validateEditForm() {
+            this.submition = true;
+
+            if (this.incorrectEditTitle || this.incorrectEditFormat || this.incorrecEditLength || this.incorrecEditYear) {
+                return false;
+            }
+
+            return true;
+        },
+
+
         /**
          * Prepare the component.
          */
@@ -45259,8 +45369,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * Create a new movie for the user.
          */
         store: function store() {
-            this.createForm.length = this.createForm.lengthHour * 60 + this.createForm.lengthMinute;
-            this.persistMovie('post', 'api/create-movie', this.createForm, '#modal-create-movie');
+            //this.createForm.length =  parseInt(this.createForm.lengthHour) * 60 +  parseInt(this.createForm.lengthMinute);
+
+            if (this.validateCreateForm()) {
+                this.persistMovie('post', 'api/create-movie', this.createForm, '#modal-create-movie');
+            }
         },
 
 
@@ -45285,8 +45398,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * Update the movie being edited.
          */
         update: function update() {
-            this.editForm.length = this.editForm.lengthHour * 60 + this.editForm.lengthMinute;
-            this.persistMovie('put', '/api/update-movie/' + this.editForm.movieId, this.editForm, '#modal-edit-movie');
+            this.editForm.length = parseInt(this.editForm.lengthHour) * 60 + parseInt(this.editForm.lengthMinute);
+
+            if (this.validateEditForm()) {
+                this.persistMovie('put', '/api/update-movie/' + this.editForm.movieId, this.editForm, '#modal-edit-movie');
+            }
         },
 
 
@@ -45299,6 +45415,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             form.errors = [];
 
             axios[method](uri, form).then(function (response) {
+                _this3.submition = false;
+
                 _this3.getUserMovies();
 
                 form.title = '';
@@ -45714,228 +45832,292 @@ var render = function() {
                 "form",
                 { staticClass: "form-horizontal", attrs: { role: "form" } },
                 [
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", { staticClass: "col-md-3 control-label" }, [
-                      _vm._v("Title")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-7" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.createForm.title,
-                            expression: "createForm.title"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { id: "create-movie-title", type: "text" },
-                        domProps: { value: _vm.createForm.title },
-                        on: {
-                          keyup: function($event) {
-                            if (
-                              !("button" in $event) &&
-                              _vm._k($event.keyCode, "enter", 13)
-                            ) {
-                              return null
-                            }
-                            _vm.store($event)
-                          },
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.createForm.title = $event.target.value
-                          }
-                        }
-                      }),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: {
+                        "has-error": _vm.submition && _vm.incorrectCreateTitle
+                      }
+                    },
+                    [
+                      _c("label", { staticClass: "col-md-3 control-label" }, [
+                        _vm._v("Title")
+                      ]),
                       _vm._v(" "),
-                      _c("span", { staticClass: "help-block" }, [
-                        _vm._v(
-                          "\n                                    Full title of movie.\n                                "
-                        )
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", { staticClass: "col-md-3 control-label" }, [
-                      _vm._v("Format")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-7" }, [
-                      _c(
-                        "select",
-                        {
+                      _c("div", { staticClass: "col-md-7" }, [
+                        _c("input", {
                           directives: [
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: _vm.createForm.formatId,
-                              expression: "createForm.formatId"
+                              value: _vm.createForm.title,
+                              expression: "createForm.title"
                             }
                           ],
-                          attrs: { id: "create-movie-formatId" },
+                          staticClass: "form-control",
+                          attrs: { id: "create-movie-title", type: "text" },
+                          domProps: { value: _vm.createForm.title },
                           on: {
-                            change: function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.createForm.formatId = $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
+                            keyup: function($event) {
+                              if (
+                                !("button" in $event) &&
+                                _vm._k($event.keyCode, "enter", 13)
+                              ) {
+                                return null
+                              }
+                              _vm.store($event)
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.createForm.title = $event.target.value
                             }
                           }
-                        },
-                        _vm._l(_vm.formats, function(format) {
-                          return _c(
-                            "option",
-                            { domProps: { value: format.id } },
-                            [
-                              _vm._v(
-                                "\n                                        " +
-                                  _vm._s(format.name) +
-                                  "\n                                    "
-                              )
-                            ]
+                        }),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "help-block" }, [
+                          _vm._v(
+                            "\n                                    Full title of movie.\n                                "
                           )
-                        })
-                      ),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "help-block" }, [
-                        _vm._v(
-                          "\n                                    Format of your movie.\n                                "
-                        )
+                        ]),
+                        _vm._v(" "),
+                        _vm.submition && _vm.incorrectCreateTitle
+                          ? _c("div", { staticClass: "help-block" }, [
+                              _vm._v(
+                                "This field is required and max length is 50."
+                              )
+                            ])
+                          : _vm._e()
                       ])
-                    ])
-                  ]),
+                    ]
+                  ),
                   _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", { staticClass: "col-md-3 control-label" }, [
-                      _vm._v("Length")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-7" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.createForm.lengthHour,
-                            expression: "createForm.lengthHour"
-                          }
-                        ],
-                        staticClass: "form-control-small",
-                        attrs: { type: "text", name: "lengthHour" },
-                        domProps: { value: _vm.createForm.lengthHour },
-                        on: {
-                          keyup: function($event) {
-                            if (
-                              !("button" in $event) &&
-                              _vm._k($event.keyCode, "enter", 13)
-                            ) {
-                              return null
-                            }
-                            _vm.store($event)
-                          },
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.createForm.lengthHour = $event.target.value
-                          }
-                        }
-                      }),
-                      _vm._v(" hr  \n                                "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.createForm.lengthMinute,
-                            expression: "createForm.lengthMinute"
-                          }
-                        ],
-                        staticClass: "form-control-small",
-                        attrs: { type: "text", name: "lengthMinute" },
-                        domProps: { value: _vm.createForm.lengthMinute },
-                        on: {
-                          keyup: function($event) {
-                            if (
-                              !("button" in $event) &&
-                              _vm._k($event.keyCode, "enter", 13)
-                            ) {
-                              return null
-                            }
-                            _vm.store($event)
-                          },
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.createForm.lengthMinute = $event.target.value
-                          }
-                        }
-                      }),
-                      _vm._v(" m \n                                "),
-                      _c("span", { staticClass: "help-block" }, [
-                        _vm._v(
-                          "\n                                    The length of the movie.\n                                "
-                        )
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", { staticClass: "col-md-3 control-label" }, [
-                      _vm._v("Year")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-7" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.createForm.year,
-                            expression: "createForm.year"
-                          }
-                        ],
-                        staticClass: "form-control-small",
-                        attrs: { type: "text", name: "year" },
-                        domProps: { value: _vm.createForm.year },
-                        on: {
-                          keyup: function($event) {
-                            if (
-                              !("button" in $event) &&
-                              _vm._k($event.keyCode, "enter", 13)
-                            ) {
-                              return null
-                            }
-                            _vm.store($event)
-                          },
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.createForm.year = $event.target.value
-                          }
-                        }
-                      }),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: {
+                        "has-error": _vm.submition && _vm.incorrectCreateFormat
+                      }
+                    },
+                    [
+                      _c("label", { staticClass: "col-md-3 control-label" }, [
+                        _vm._v("Format")
+                      ]),
                       _vm._v(" "),
-                      _c("span", { staticClass: "help-block" }, [
-                        _vm._v(
-                          "\n                                    Year movie was released.\n                                "
-                        )
+                      _c("div", { staticClass: "col-md-7" }, [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.createForm.formatId,
+                                expression: "createForm.formatId"
+                              }
+                            ],
+                            attrs: { id: "create-movie-formatId" },
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.createForm.formatId = $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              }
+                            }
+                          },
+                          _vm._l(_vm.formats, function(format) {
+                            return _c(
+                              "option",
+                              { domProps: { value: format.id } },
+                              [
+                                _vm._v(
+                                  "\n                                        " +
+                                    _vm._s(format.name) +
+                                    "\n                                    "
+                                )
+                              ]
+                            )
+                          })
+                        ),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "help-block" }, [
+                          _vm._v(
+                            "\n                                    Format of your movie.\n                                "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _vm.submition && _vm.incorrectCreateFormat
+                          ? _c("div", { staticClass: "help-block" }, [
+                              _vm._v("This field is required.")
+                            ])
+                          : _vm._e()
                       ])
-                    ])
-                  ]),
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: {
+                        "has-error": _vm.submition && _vm.incorrecCreatetLength
+                      }
+                    },
+                    [
+                      _c("label", { staticClass: "col-md-3 control-label" }, [
+                        _vm._v("Length")
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-7" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.createForm.lengthHour,
+                              expression: "createForm.lengthHour"
+                            }
+                          ],
+                          staticClass: "form-control-small",
+                          attrs: { type: "text", name: "lengthHour" },
+                          domProps: { value: _vm.createForm.lengthHour },
+                          on: {
+                            keyup: function($event) {
+                              if (
+                                !("button" in $event) &&
+                                _vm._k($event.keyCode, "enter", 13)
+                              ) {
+                                return null
+                              }
+                              _vm.store($event)
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.createForm.lengthHour = $event.target.value
+                            }
+                          }
+                        }),
+                        _vm._v(" hr  \n                                "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.createForm.lengthMinute,
+                              expression: "createForm.lengthMinute"
+                            }
+                          ],
+                          staticClass: "form-control-small",
+                          attrs: { type: "text", name: "lengthMinute" },
+                          domProps: { value: _vm.createForm.lengthMinute },
+                          on: {
+                            keyup: function($event) {
+                              if (
+                                !("button" in $event) &&
+                                _vm._k($event.keyCode, "enter", 13)
+                              ) {
+                                return null
+                              }
+                              _vm.store($event)
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.createForm.lengthMinute = $event.target.value
+                            }
+                          }
+                        }),
+                        _vm._v(" m \n                                "),
+                        _c("span", { staticClass: "help-block" }, [
+                          _vm._v(
+                            "\n                                    The length of the movie.\n                                "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _vm.submition && _vm.incorrecCreatetLength
+                          ? _c("div", { staticClass: "help-block" }, [
+                              _vm._v(
+                                "These fields combined must be between 1 and 500 minutes."
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: {
+                        "has-error": _vm.submition && _vm.incorrecCreatetYear
+                      }
+                    },
+                    [
+                      _c("label", { staticClass: "col-md-3 control-label" }, [
+                        _vm._v("Year")
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-7" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.createForm.year,
+                              expression: "createForm.year"
+                            }
+                          ],
+                          staticClass: "form-control-small",
+                          attrs: { type: "text", name: "year" },
+                          domProps: { value: _vm.createForm.year },
+                          on: {
+                            keyup: function($event) {
+                              if (
+                                !("button" in $event) &&
+                                _vm._k($event.keyCode, "enter", 13)
+                              ) {
+                                return null
+                              }
+                              _vm.store($event)
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.createForm.year = $event.target.value
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "help-block" }, [
+                          _vm._v(
+                            "\n                                    Year movie was released.\n                                "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _vm.submition && _vm.incorrecCreatetYear
+                          ? _c("div", { staticClass: "help-block" }, [
+                              _vm._v("This field must be betwee 1800 and 2100.")
+                            ])
+                          : _vm._e()
+                      ])
+                    ]
+                  ),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
                     _c("label", { staticClass: "col-md-3 control-label" }, [
@@ -46161,228 +46343,292 @@ var render = function() {
                 "form",
                 { staticClass: "form-horizontal", attrs: { role: "form" } },
                 [
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", { staticClass: "col-md-3 control-label" }, [
-                      _vm._v("Name")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-7" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.editForm.title,
-                            expression: "editForm.title"
-                          }
-                        ],
-                        staticClass: "form-control",
-                        attrs: { id: "edit-movie-title", type: "text" },
-                        domProps: { value: _vm.editForm.title },
-                        on: {
-                          keyup: function($event) {
-                            if (
-                              !("button" in $event) &&
-                              _vm._k($event.keyCode, "enter", 13)
-                            ) {
-                              return null
-                            }
-                            _vm.update($event)
-                          },
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.editForm.title = $event.target.value
-                          }
-                        }
-                      }),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: {
+                        "has-error": _vm.submition && _vm.incorrectEditTitle
+                      }
+                    },
+                    [
+                      _c("label", { staticClass: "col-md-3 control-label" }, [
+                        _vm._v("Name")
+                      ]),
                       _vm._v(" "),
-                      _c("span", { staticClass: "help-block" }, [
-                        _vm._v(
-                          "\n                                    Full title of movie.\n                                "
-                        )
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", { staticClass: "col-md-3 control-label" }, [
-                      _vm._v("Format")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-7" }, [
-                      _c(
-                        "select",
-                        {
+                      _c("div", { staticClass: "col-md-7" }, [
+                        _c("input", {
                           directives: [
                             {
                               name: "model",
                               rawName: "v-model",
-                              value: _vm.editForm.formatId,
-                              expression: "editForm.formatId"
+                              value: _vm.editForm.title,
+                              expression: "editForm.title"
                             }
                           ],
-                          attrs: { id: "edit-movie-formatId" },
+                          staticClass: "form-control",
+                          attrs: { id: "edit-movie-title", type: "text" },
+                          domProps: { value: _vm.editForm.title },
                           on: {
-                            change: function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.editForm.formatId = $event.target.multiple
-                                ? $$selectedVal
-                                : $$selectedVal[0]
+                            keyup: function($event) {
+                              if (
+                                !("button" in $event) &&
+                                _vm._k($event.keyCode, "enter", 13)
+                              ) {
+                                return null
+                              }
+                              _vm.update($event)
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.editForm.title = $event.target.value
                             }
                           }
-                        },
-                        _vm._l(_vm.formats, function(format) {
-                          return _c(
-                            "option",
-                            { domProps: { value: format.id } },
-                            [
-                              _vm._v(
-                                "\n                                        " +
-                                  _vm._s(format.name) +
-                                  "\n                                    "
-                              )
-                            ]
+                        }),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "help-block" }, [
+                          _vm._v(
+                            "\n                                    Full title of movie.\n                                "
                           )
-                        })
-                      ),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "help-block" }, [
-                        _vm._v(
-                          "\n                                    Format of your movie.\n                                "
-                        )
+                        ]),
+                        _vm._v(" "),
+                        _vm.submition && _vm.incorrectEditTitle
+                          ? _c("div", { staticClass: "help-block" }, [
+                              _vm._v(
+                                "This field is required and max length is 50."
+                              )
+                            ])
+                          : _vm._e()
                       ])
-                    ])
-                  ]),
+                    ]
+                  ),
                   _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", { staticClass: "col-md-3 control-label" }, [
-                      _vm._v("Length")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-7" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.editForm.lengthHour,
-                            expression: "editForm.lengthHour"
-                          }
-                        ],
-                        staticClass: "form-control-small",
-                        attrs: { type: "text", name: "lengthHour" },
-                        domProps: { value: _vm.editForm.lengthHour },
-                        on: {
-                          keyup: function($event) {
-                            if (
-                              !("button" in $event) &&
-                              _vm._k($event.keyCode, "enter", 13)
-                            ) {
-                              return null
-                            }
-                            _vm.store($event)
-                          },
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.editForm.lengthHour = $event.target.value
-                          }
-                        }
-                      }),
-                      _vm._v(" hr  \n                                "),
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.editForm.lengthMinute,
-                            expression: "editForm.lengthMinute"
-                          }
-                        ],
-                        staticClass: "form-control-small",
-                        attrs: { type: "text", name: "lengthMinute" },
-                        domProps: { value: _vm.editForm.lengthMinute },
-                        on: {
-                          keyup: function($event) {
-                            if (
-                              !("button" in $event) &&
-                              _vm._k($event.keyCode, "enter", 13)
-                            ) {
-                              return null
-                            }
-                            _vm.store($event)
-                          },
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.editForm.lengthMinute = $event.target.value
-                          }
-                        }
-                      }),
-                      _vm._v(" m\n\n                                "),
-                      _c("span", { staticClass: "help-block" }, [
-                        _vm._v(
-                          "\n                                    The length of the movie.\n                                "
-                        )
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", { staticClass: "col-md-3 control-label" }, [
-                      _vm._v("Year")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-md-7" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.editForm.year,
-                            expression: "editForm.year"
-                          }
-                        ],
-                        staticClass: "form-control-small",
-                        attrs: { type: "text", name: "year" },
-                        domProps: { value: _vm.editForm.year },
-                        on: {
-                          keyup: function($event) {
-                            if (
-                              !("button" in $event) &&
-                              _vm._k($event.keyCode, "enter", 13)
-                            ) {
-                              return null
-                            }
-                            _vm.store($event)
-                          },
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.editForm.year = $event.target.value
-                          }
-                        }
-                      }),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: {
+                        "has-error": _vm.submition && _vm.incorrectEditFormat
+                      }
+                    },
+                    [
+                      _c("label", { staticClass: "col-md-3 control-label" }, [
+                        _vm._v("Format")
+                      ]),
                       _vm._v(" "),
-                      _c("span", { staticClass: "help-block" }, [
-                        _vm._v(
-                          "\n                                    Year movie was released.\n                                "
-                        )
+                      _c("div", { staticClass: "col-md-7" }, [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.editForm.formatId,
+                                expression: "editForm.formatId"
+                              }
+                            ],
+                            attrs: { id: "edit-movie-formatId" },
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.editForm.formatId = $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              }
+                            }
+                          },
+                          _vm._l(_vm.formats, function(format) {
+                            return _c(
+                              "option",
+                              { domProps: { value: format.id } },
+                              [
+                                _vm._v(
+                                  "\n                                        " +
+                                    _vm._s(format.name) +
+                                    "\n                                    "
+                                )
+                              ]
+                            )
+                          })
+                        ),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "help-block" }, [
+                          _vm._v(
+                            "\n                                    Format of your movie.\n                                "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _vm.submition && _vm.incorrectEditFormat
+                          ? _c("div", { staticClass: "help-block" }, [
+                              _vm._v("This field is required.")
+                            ])
+                          : _vm._e()
                       ])
-                    ])
-                  ]),
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: {
+                        "has-error": _vm.submition && _vm.incorrecEditLength
+                      }
+                    },
+                    [
+                      _c("label", { staticClass: "col-md-3 control-label" }, [
+                        _vm._v("Length")
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-7" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.editForm.lengthHour,
+                              expression: "editForm.lengthHour"
+                            }
+                          ],
+                          staticClass: "form-control-small",
+                          attrs: { type: "text", name: "lengthHour" },
+                          domProps: { value: _vm.editForm.lengthHour },
+                          on: {
+                            keyup: function($event) {
+                              if (
+                                !("button" in $event) &&
+                                _vm._k($event.keyCode, "enter", 13)
+                              ) {
+                                return null
+                              }
+                              _vm.store($event)
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.editForm.lengthHour = $event.target.value
+                            }
+                          }
+                        }),
+                        _vm._v(" hr  \n                                "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.editForm.lengthMinute,
+                              expression: "editForm.lengthMinute"
+                            }
+                          ],
+                          staticClass: "form-control-small",
+                          attrs: { type: "text", name: "lengthMinute" },
+                          domProps: { value: _vm.editForm.lengthMinute },
+                          on: {
+                            keyup: function($event) {
+                              if (
+                                !("button" in $event) &&
+                                _vm._k($event.keyCode, "enter", 13)
+                              ) {
+                                return null
+                              }
+                              _vm.store($event)
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.editForm.lengthMinute = $event.target.value
+                            }
+                          }
+                        }),
+                        _vm._v(" m\n\n                                "),
+                        _c("span", { staticClass: "help-block" }, [
+                          _vm._v(
+                            "\n                                    The length of the movie.\n                                "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _vm.submition && _vm.incorrecEditLength
+                          ? _c("div", { staticClass: "help-block" }, [
+                              _vm._v(
+                                "These fields combined must be between 1 and 500 minutes."
+                              )
+                            ])
+                          : _vm._e()
+                      ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: {
+                        "has-error": _vm.submition && _vm.incorrecEditYear
+                      }
+                    },
+                    [
+                      _c("label", { staticClass: "col-md-3 control-label" }, [
+                        _vm._v("Year")
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-7" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.editForm.year,
+                              expression: "editForm.year"
+                            }
+                          ],
+                          staticClass: "form-control-small",
+                          attrs: { type: "text", name: "year" },
+                          domProps: { value: _vm.editForm.year },
+                          on: {
+                            keyup: function($event) {
+                              if (
+                                !("button" in $event) &&
+                                _vm._k($event.keyCode, "enter", 13)
+                              ) {
+                                return null
+                              }
+                              _vm.store($event)
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.editForm.year = $event.target.value
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "help-block" }, [
+                          _vm._v(
+                            "\n                                    Year movie was released.\n                                "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _vm.submition && _vm.incorrecEditYear
+                          ? _c("div", { staticClass: "help-block" }, [
+                              _vm._v("This field must be betwee 1800 and 2100.")
+                            ])
+                          : _vm._e()
+                      ])
+                    ]
+                  ),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
                     _c("label", { staticClass: "col-md-3 control-label" }, [
