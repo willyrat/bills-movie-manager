@@ -35,6 +35,7 @@ class MoviesAPIController extends Controller
 
             $user = Auth::user();
 
+            //tableInfo is used to build the order by clause
             $tableInfo = array();
 
             $tableInfo['rating'] = 'user_movies';
@@ -43,12 +44,13 @@ class MoviesAPIController extends Controller
             $tableInfo['title'] = 'movies';
             $tableInfo['releaseYear'] = 'movies';
 
+            //Check to see if orderBy was sent in. If it was then create the proper order by clause
             if(!is_null(request('orderBy')) && !is_null(request('direction')) && request('direction') != 'none')
             {                
                 $orderBy = $tableInfo[request('orderBy')].".".request('orderBy');
                 $direction = request('direction');
             }
-            else
+            else    //Else we will order by id
             {
                 $orderBy = 'movies.id';
                 $direction = 'asc';
@@ -63,10 +65,11 @@ class MoviesAPIController extends Controller
             ->where('user_movies.active', '>', 0)
             ->where('movies.active', '>', 0)
             ->orderBy($orderBy, $direction)
-            ->get();
+            ->get();            
             
             $success['sorting'] = array('orderBy' => substr($orderBy, strpos($orderBy, '.')+1, strlen($orderBy)) , 'direction' => $direction);
             
+            //Send back new movie data along with success status
             return response()->json(['success' => $success], $this->successStatus);                
         }
         else
@@ -225,9 +228,7 @@ class MoviesAPIController extends Controller
             Log::info(request()->all());
                
                 $validator = Validator::make($request->all(), 
-                [
-                    //'movieId' => 'required|integer|min:1',
-                    
+                [ 
                     'title' => 'sometimes|max:50',                
                     'lengthTotal' => 'sometimes|integer|between:1,500',
                     'year' => 'sometimes|integer|between:1801,2099',                               
@@ -252,7 +253,6 @@ class MoviesAPIController extends Controller
                 try 
                 {   
                     Log::info('now update movies in MoviesAPIController updateUserMovie - ');   
-
                     
                     $updateParams = array(); 
                     $request->has('formatId') ? $updateParams['formatId'] = request('formatId') : 1;
@@ -297,7 +297,6 @@ class MoviesAPIController extends Controller
                     $rowsAffected = 0;
                     try 
                     {
-
                         $updateParams = array(); 
                         $request->has('title') ? $updateParams['title'] = request('title') : 1;
                         $request->has('lengthTotal') ? $updateParams['lengthTotal'] = request('lengthTotal') : 1;
@@ -363,7 +362,6 @@ class MoviesAPIController extends Controller
         //since we are using the auth::user id and the passed in movie id on the user_movie table, 
         //we should be protecting other user's data (if somone passes in a movie id that is not part of the user_movie PK pair)
         Log::info('in MoviesAPIController deleteUserMovie... id='.$id);
-        
                     
         if(Auth::check())
         {
@@ -479,7 +477,6 @@ class MoviesAPIController extends Controller
     public function getMovieFormats(Request $request)
     {
         Log::info('in MoviesAPIController getMovieFormats... ');
-
         
         if(Auth::check())
         {
@@ -492,7 +489,6 @@ class MoviesAPIController extends Controller
             ->select('formats.id', 'formats.name')
             ->where('formats.active', '>', 0)
             ->get();
-
             
             return response()->json(['success' => $success], $this->successStatus);                
         }
@@ -501,7 +497,6 @@ class MoviesAPIController extends Controller
             return response()->json(['error'=>'Unauthorised'], 401);
         }
     }
-
 
     //TODO: create calls to crud formats ... delete will have ramifications that need to be handled 
 }

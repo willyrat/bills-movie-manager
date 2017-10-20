@@ -622,9 +622,7 @@
                             axios.get('/api/get-user-movies')
                                     .then(response => 
                                     {
-                                        this.userMovies = response.data.success.userMovies;
-
-                                        
+                                        this.userMovies = response.data.success.userMovies;                                       
 
                                         if(this.userMovies[0] !== null)
                                         {
