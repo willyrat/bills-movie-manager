@@ -94,7 +94,7 @@ class MoviesAPIController extends Controller
             [
                 'title' => 'required|max:50',                
                 'lengthTotal' => 'required|integer|between:1,500',                
-                'year' => 'required|integer|between:1800,2100',                                
+                'year' => 'required|integer|between:1801,2099',                                
                 'formatId' => 'required|integer|min:1|max:3',                                    
                 'rating' => 'sometimes|integer|between:1,5',                                    
             ]);                
@@ -230,7 +230,7 @@ class MoviesAPIController extends Controller
                     
                     'title' => 'sometimes|max:50',                
                     'lengthTotal' => 'sometimes|integer|between:1,500',
-                    'year' => 'sometimes|integer|between:1800,2100',                               
+                    'year' => 'sometimes|integer|between:1801,2099',                               
                     'formatId' => 'sometimes|integer|min:1|max:3', 
                     'rating' => 'sometimes|integer|between:1,5',            
                 ]);                

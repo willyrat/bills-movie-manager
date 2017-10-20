@@ -6,84 +6,42 @@
     .m-b-none {
         margin-bottom: 0;
     }
+  
 
-.table > thead > tr > th, .table > thead > tr > td, .table > tbody > tr > th, .table > tbody > tr > td, .table > tfoot > tr > th, .table > tfoot > tr > td
-{
-    padding: 4px;
-}
-
-.form-control-small 
-{
-       width: 20%;  
-}
-
-@media (max-width: 642px)
-{
-    .table > thead > tr > th, .table > thead > tr > td, .table > tbody > tr > th, .table > tbody > tr > td, .table > tfoot > tr > th, .table > tfoot > tr > td
-    {
-        padding: 2px;
-        font-size: 13px;
+    th.active {
+    color: #000;
     }
-}
 
-    @media (max-width: 585px)
-    {
-        .toggle-header
-        {
-            display:none;
-        }
-        .toggle-column
-        {
-            display:none;
-        }
-    }  
+    th.active .arrow {
+    opacity: 1;
+    }
 
-    @media (max-width: 467px)
-    {
-        .toggle-header2
-        {
-            display:none;
-        }
-        .toggle-column2
-        {
-            display:none;
-        }
-    }   
+    .arrow {
+    display: inline-block;
+    vertical-align: middle;
+    width: 0;
+    height: 0;
+    margin-left: 5px;
+    opacity: 0.66;
+    }
 
-th.active {
-  color: #000;
-}
+    .arrow.asc {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid #000;
+    }
 
-th.active .arrow {
-  opacity: 1;
-}
+    .arrow.desc {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #000;
+    } 
 
-.arrow {
-  display: inline-block;
-  vertical-align: middle;
-  width: 0;
-  height: 0;
-  margin-left: 5px;
-  opacity: 0.66;
-}
-
-.arrow.asc {
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-bottom: 4px solid #000;
-}
-
-.arrow.desc {
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 4px solid #000;
-} 
-
-.arrow.none {
-  border-left: 0px solid transparent;
-  border-right: 0px solid transparent;
-  border-top: 0px solid #000;
-} 
+    .arrow.none {
+    border-left: 0px solid transparent;
+    border-right: 0px solid transparent;
+    border-top: 0px solid #000;
+    } 
 
 </style>
 
@@ -254,7 +212,7 @@ th.active .arrow {
                                     <span class="help-block">
                                         Year movie was released.
                                     </span>
-                                    <div class="help-block" v-if="submition && incorrecCreatetYear">This field must be betwee 1800 and 2100.</div>
+                                    <div class="help-block" v-if="submition && incorrecCreatetYear">This field must be betwee 1801 and 2099.</div>
                                 </div>
                             </div>
 
@@ -385,7 +343,7 @@ th.active .arrow {
                                     <span class="help-block">
                                         Year movie was released.
                                     </span>
-                                    <div class="help-block" v-if="submition && incorrecEditYear">This field must be betwee 1800 and 2100.</div>
+                                    <div class="help-block" v-if="submition && incorrecEditYear">This field must be betwee 1801 and 2099.</div>
                                 </div>
                             </div>
 
@@ -584,7 +542,7 @@ th.active .arrow {
             incorrecCreatetYear() 
             { 
                 //integer, >1800 and < 2100)                
-                if(isNaN(this.createForm.year) || this.createForm.year < 1800  || this.createForm.year > 2100)
+                if(isNaN(this.createForm.year) || this.createForm.year < 1801  || this.createForm.year > 2099)
                 {
                     return true;
                 } 
@@ -594,7 +552,7 @@ th.active .arrow {
             incorrecEditYear() 
             { 
                 //integer, >1800 and < 2100)                
-                if(isNaN(this.editForm.year) || this.editForm.year < 1800  || this.editForm.year > 2100)
+                if(isNaN(this.editForm.year) || this.editForm.year < 1801  || this.editForm.year > 2099)
                 {
                     return true;
                 } 

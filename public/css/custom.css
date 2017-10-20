@@ -20,10 +20,72 @@
 }
 
 
+.table > thead > tr > th, .table > thead > tr > td, .table > tbody > tr > th, .table > tbody > tr > td, .table > tfoot > tr > th, .table > tfoot > tr > td
+{
+    padding: 4px;
+}
+
+.form-control-small 
+{
+       width: 20%;  
+}
+
+
 @media only screen and (orientation: landscape) and (max-width: 767px)
 {
     .flex-center 
     {
         padding-top: 150px;    
     }
+}
+
+
+
+
+@media (max-width: 642px)
+{
+    .table > thead > tr > th, .table > thead > tr > td, .table > tbody > tr > th, .table > tbody > tr > td, .table > tfoot > tr > th, .table > tfoot > tr > td
+    {
+        padding: 2px;
+        font-size: 13px;
+    }
+}
+
+    @media (max-width: 585px)
+    {
+        .toggle-header
+        {
+            display:none;
+        }
+        .toggle-column
+        {
+            display:none;
+        }
+    }  
+
+    @media (max-width: 467px)
+    {
+        .toggle-header2
+        {
+            display:none;
+        }
+        .toggle-column2
+        {
+            display:none;
+        }
+    } 
+
+
+
+.footer 
+{ 
+    width: 100%;
+    background-color: #fff;
+    min-height: 30px;
+}
+
+.footer-text
+{
+    text-align: center;
+    color: #000;
 }

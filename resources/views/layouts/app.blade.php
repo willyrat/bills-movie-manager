@@ -77,6 +77,9 @@
         @yield('content')
     </div>
 
+    <footer class="row footer col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        @include('layouts.footer')
+    </footer>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
 </body>

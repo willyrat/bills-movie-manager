@@ -87,5 +87,8 @@
                 
             </div>
         </div>
+        <footer class="row footer col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            @include('layouts.footer')
+        </footer>
     </body>
 </html>

@@ -44690,7 +44690,7 @@ exports = module.exports = __webpack_require__(2)(undefined);
 
 
 // module
-exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n        cursor: pointer;\n}\n.m-b-none[data-v-0fec7cb6] {\n        margin-bottom: 0;\n}\n.table > thead > tr > th[data-v-0fec7cb6], .table > thead > tr > td[data-v-0fec7cb6], .table > tbody > tr > th[data-v-0fec7cb6], .table > tbody > tr > td[data-v-0fec7cb6], .table > tfoot > tr > th[data-v-0fec7cb6], .table > tfoot > tr > td[data-v-0fec7cb6]\n{\n    padding: 4px;\n}\n.form-control-small[data-v-0fec7cb6] \n{\n       width: 20%;\n}\n@media (max-width: 642px)\n{\n.table > thead > tr > th[data-v-0fec7cb6], .table > thead > tr > td[data-v-0fec7cb6], .table > tbody > tr > th[data-v-0fec7cb6], .table > tbody > tr > td[data-v-0fec7cb6], .table > tfoot > tr > th[data-v-0fec7cb6], .table > tfoot > tr > td[data-v-0fec7cb6]\n    {\n        padding: 2px;\n        font-size: 13px;\n}\n}\n@media (max-width: 585px)\n    {\n.toggle-header[data-v-0fec7cb6]\n        {\n            display:none;\n}\n.toggle-column[data-v-0fec7cb6]\n        {\n            display:none;\n}\n}\n@media (max-width: 467px)\n    {\n.toggle-header2[data-v-0fec7cb6]\n        {\n            display:none;\n}\n.toggle-column2[data-v-0fec7cb6]\n        {\n            display:none;\n}\n}\nth.active[data-v-0fec7cb6] {\n  color: #000;\n}\nth.active .arrow[data-v-0fec7cb6] {\n  opacity: 1;\n}\n.arrow[data-v-0fec7cb6] {\n  display: inline-block;\n  vertical-align: middle;\n  width: 0;\n  height: 0;\n  margin-left: 5px;\n  opacity: 0.66;\n}\n.arrow.asc[data-v-0fec7cb6] {\n  border-left: 4px solid transparent;\n  border-right: 4px solid transparent;\n  border-bottom: 4px solid #000;\n}\n.arrow.desc[data-v-0fec7cb6] {\n  border-left: 4px solid transparent;\n  border-right: 4px solid transparent;\n  border-top: 4px solid #000;\n}\n.arrow.none[data-v-0fec7cb6] {\n  border-left: 0px solid transparent;\n  border-right: 0px solid transparent;\n  border-top: 0px solid #000;\n} \n\n", ""]);
+exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n    cursor: pointer;\n}\n.m-b-none[data-v-0fec7cb6] {\n    margin-bottom: 0;\n}\nth.active[data-v-0fec7cb6] {\ncolor: #000;\n}\nth.active .arrow[data-v-0fec7cb6] {\nopacity: 1;\n}\n.arrow[data-v-0fec7cb6] {\ndisplay: inline-block;\nvertical-align: middle;\nwidth: 0;\nheight: 0;\nmargin-left: 5px;\nopacity: 0.66;\n}\n.arrow.asc[data-v-0fec7cb6] {\nborder-left: 4px solid transparent;\nborder-right: 4px solid transparent;\nborder-bottom: 4px solid #000;\n}\n.arrow.desc[data-v-0fec7cb6] {\nborder-left: 4px solid transparent;\nborder-right: 4px solid transparent;\nborder-top: 4px solid #000;\n}\n.arrow.none[data-v-0fec7cb6] {\nborder-left: 0px solid transparent;\nborder-right: 0px solid transparent;\nborder-top: 0px solid #000;\n} \n\n", ""]);
 
 // exports
 
@@ -44703,48 +44703,6 @@ exports.push([module.i, "\n.action-link[data-v-0fec7cb6] {\n        cursor: poin
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -45272,7 +45230,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
         incorrecCreatetYear: function incorrecCreatetYear() {
             //integer, >1800 and < 2100)                
-            if (isNaN(this.createForm.year) || this.createForm.year < 1800 || this.createForm.year > 2100) {
+            if (isNaN(this.createForm.year) || this.createForm.year < 1801 || this.createForm.year > 2099) {
                 return true;
             }
 
@@ -45280,7 +45238,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
         incorrecEditYear: function incorrecEditYear() {
             //integer, >1800 and < 2100)                
-            if (isNaN(this.editForm.year) || this.editForm.year < 1800 || this.editForm.year > 2100) {
+            if (isNaN(this.editForm.year) || this.editForm.year < 1801 || this.editForm.year > 2099) {
                 return true;
             }
 
@@ -46140,7 +46098,7 @@ var render = function() {
                         _vm._v(" "),
                         _vm.submition && _vm.incorrecCreatetYear
                           ? _c("div", { staticClass: "help-block" }, [
-                              _vm._v("This field must be betwee 1800 and 2100.")
+                              _vm._v("This field must be betwee 1801 and 2099.")
                             ])
                           : _vm._e()
                       ])
@@ -46651,7 +46609,7 @@ var render = function() {
                         _vm._v(" "),
                         _vm.submition && _vm.incorrecEditYear
                           ? _c("div", { staticClass: "help-block" }, [
-                              _vm._v("This field must be betwee 1800 and 2100.")
+                              _vm._v("This field must be betwee 1801 and 2099.")
                             ])
                           : _vm._e()
                       ])
