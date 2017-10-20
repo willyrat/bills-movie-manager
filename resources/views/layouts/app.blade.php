@@ -12,6 +12,9 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <link href="{{ asset('/css/custom.css') }}" rel="stylesheet" />
+
 </head>
 <body>
     <div id="app">
@@ -29,7 +32,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        <img src="/images/BillsMovieManager-icon1-50x50.png" alt="Bill's Movie Manager" title="Bill's Movie Manager" > {{ config('app.name', 'Laravel') }}
                     </a>
                 </div>
 

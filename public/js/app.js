@@ -45152,7 +45152,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 errors: [],
                 title: '',
                 formatId: '',
-                length: '',
+                lengthTotal: '',
                 lengthHour: '',
                 lengthMinute: '',
                 year: '',
@@ -45163,7 +45163,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 errors: [],
                 title: '',
                 formatId: '',
-                length: '',
+                lengthTotal: '',
                 lengthHour: '',
                 lengthMinute: '',
                 year: '',
@@ -45220,24 +45220,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             //  time, minutes, >0 and <500)   
             var hour = 0;
             var minute = 0;
-            if (this.createForm.lengthHour.length > 0) {
+            if (this.createForm.lengthHour.toString().trim().length > 0) {
                 if (isNaN(this.createForm.lengthHour)) {
                     return true;
                 }
                 hour = parseInt(this.createForm.lengthHour);
             }
 
-            if (this.createForm.lengthMinute.length > 0) {
+            if (this.createForm.lengthMinute.toString().trim().length > 0) {
                 if (isNaN(this.createForm.lengthMinute)) {
                     return true;
                 }
                 minute = parseInt(this.createForm.lengthMinute);
             }
 
-            this.createForm.length = hour * 60 + minute;
+            this.createForm.lengthTotal = hour * 60 + minute;
 
-            //Check to see if length is less than 1 or greater than 500 minutes
-            if (isNaN(this.createForm.length) || this.createForm.length < 1 || this.createForm.length > 500) {
+            //Check to see if lengthTotal is less than 1 or greater than 500 minutes
+            if (isNaN(this.createForm.lengthTotal) || this.createForm.lengthTotal < 1 || this.createForm.lengthTotal > 500) {
                 return true;
             }
 
@@ -45247,24 +45247,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             //  time, minutes, >0 and <500)   
             var hour = 0;
             var minute = 0;
-            if (this.editForm.lengthHour.length > 0) {
+            if (this.editForm.lengthHour.toString().trim().length > 0) {
                 if (isNaN(this.editForm.lengthHour)) {
                     return true;
                 }
                 hour = parseInt(this.editForm.lengthHour);
             }
 
-            if (this.editForm.lengthMinute.length > 0) {
+            if (this.editForm.lengthMinute.toString().trim().length > 0) {
                 if (isNaN(this.editForm.lengthMinute)) {
                     return true;
                 }
                 minute = parseInt(this.editForm.lengthMinute);
             }
 
-            this.editForm.length = hour * 60 + minute;
+            this.editForm.lengthTotal = hour * 60 + minute;
 
-            //Check to see if length is less than 1 or greater than 500 minutes
-            if (isNaN(this.editForm.length) || this.editForm.length < 1 || this.editForm.length > 500) {
+            //Check to see if lengthTotal is less than 1 or greater than 500 minutes
+            if (isNaN(this.editForm.lengthTotal) || this.editForm.lengthTotal < 1 || this.editForm.lengthTotal > 500) {
                 return true;
             }
 
@@ -45338,8 +45338,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     _this.userMovies = response.data.success.userMovies;
 
                     if (_this.userMovies[0] !== null) {
+                        for (var i = 0; i < _this.userMovies.length; i++) {
+                            _this.userMovies[i]['lengthHour'] = Math.floor(_this.userMovies[i]["lengthTotal"] / 60);
+                            _this.userMovies[i]['lengthMinute'] = _this.userMovies[i]["lengthTotal"] % 60;
+                        }
+
+                        //only need to grab one set
                         var temp = Object.keys(_this.userMovies[0]);
-                        for (var i = 0; i < temp.length; i++) {
+                        for (i = 0; i < temp.length; i++) {
                             _this.sortOrders[temp[i]] = 0;
                         }
                     }
@@ -45356,7 +45362,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 _this2.userMovies = response.data.success.userMovies;
 
                 if (_this2.userMovies[0] !== null) {
+                    for (var i = 0; i < _this2.userMovies.length; i++) {
+                        _this2.userMovies[i]['lengthHour'] = Math.floor(_this2.userMovies[i]["lengthTotal"] / 60);
+                        _this2.userMovies[i]['lengthMinute'] = _this2.userMovies[i]["lengthTotal"] % 60;
+                    }
 
+                    //only need to grab one set
                     //reset sortOrders array
                     var temp = Object.keys(_this2.sortOrders);
                     for (var i = 0; i < temp.length; i++) {
@@ -45383,8 +45394,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * Create a new movie for the user.
          */
         store: function store() {
-            //this.createForm.length =  parseInt(this.createForm.lengthHour) * 60 +  parseInt(this.createForm.lengthMinute);
-
+            //this.createForm.lengthTotal =  parseInt(this.createForm.lengthHour) * 60 +  parseInt(this.createForm.lengthMinute);
+            this.createForm.year = parseInt(this.createForm.year);
             if (this.validateCreateForm()) {
                 this.persistMovie('post', 'api/create-movie', this.createForm, '#modal-create-movie');
             }
@@ -45402,7 +45413,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.editForm.lengthMinute = userMovie.lengthMinute;
             this.editForm.year = userMovie.releaseYear;
             this.editForm.rating = userMovie.rating;
-            this.editForm.length = '';
+            this.editForm.lengthTotal = '';
 
             $('#modal-edit-movie').modal('show');
         },
@@ -45412,10 +45423,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * Update the movie being edited.
          */
         update: function update() {
-            this.editForm.length = parseInt(this.editForm.lengthHour) * 60 + parseInt(this.editForm.lengthMinute);
+            //this.editForm.lengthTotal = parseInt(this.editForm.lengthHour) * 60 + parseInt(this.editForm.lengthMinute);
+            this.editForm.year = parseInt(this.editForm.year);
 
             if (this.validateEditForm()) {
-                this.persistMovie('put', '/api/update-movie/' + this.editForm.movieId, this.editForm, '#modal-edit-movie');
+                this.persistMovie('patch', '/api/update-movie/' + this.editForm.movieId, this.editForm, '#modal-edit-movie');
             }
         },
 
@@ -45440,7 +45452,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 form.year = '';
                 form.rating = '';
                 form.errors = [];
-                form.length = '';
+                form.lengthTotal = '';
 
                 $(modal).modal('hide');
             }).catch(function (error) {
@@ -45583,10 +45595,10 @@ var render = function() {
                     "th",
                     {
                       staticClass: "toggle-header",
-                      class: { active: _vm.sortKey == "length" },
+                      class: { active: _vm.sortKey == "lengthTotal" },
                       on: {
                         click: function($event) {
-                          _vm.getSortedUserMovies("length")
+                          _vm.getSortedUserMovies("lengthTotal")
                         }
                       }
                     },
@@ -45595,9 +45607,11 @@ var render = function() {
                       _c("span", {
                         staticClass: "arrow",
                         class:
-                          _vm.sortOrders["length"] > 0
+                          _vm.sortOrders["lengthTotal"] > 0
                             ? "asc"
-                            : _vm.sortOrders["length"] < 0 ? "desc" : "none"
+                            : _vm.sortOrders["lengthTotal"] < 0
+                              ? "desc"
+                              : "none"
                       })
                     ]
                   ),

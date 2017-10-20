@@ -39,7 +39,7 @@ class MoviesAPIController extends Controller
 
             $tableInfo['rating'] = 'user_movies';
             $tableInfo['name'] = 'formats';
-            $tableInfo['length'] = 'movies';
+            $tableInfo['lengthTotal'] = 'movies';
             $tableInfo['title'] = 'movies';
             $tableInfo['releaseYear'] = 'movies';
 
@@ -58,8 +58,10 @@ class MoviesAPIController extends Controller
             ->join('users', 'users.id', '=', 'user_movies.userId')
             ->join('movies', 'movies.id', '=', 'user_movies.movieId')
             ->join('formats', 'formats.id', '=', 'user_movies.formatId')
-            ->select('movies.id', 'users.firstName', 'users.lastName','movies.id', 'movies.title', DB::raw('FLOOR(movies.length/60) as lengthHour') , DB::raw('MOD(movies.length,60) as lengthMinute') ,'movies.releaseYear', 'user_movies.rating', 'user_movies.formatId')
+            ->select('movies.id', 'users.firstName', 'users.lastName','movies.id', 'movies.title', 'movies.lengthTotal' , 'movies.releaseYear', 'user_movies.rating', 'user_movies.formatId')
             ->where('users.id', '=', $user->id)
+            ->where('user_movies.active', '>', 0)
+            ->where('movies.active', '>', 0)
             ->orderBy($orderBy, $direction)
             ->get();
             
@@ -90,10 +92,11 @@ class MoviesAPIController extends Controller
             
             $validator = Validator::make($request->all(), 
             [
-                'title' => 'required',                
-                'length' => 'required',
-                'year' => 'required',                               
-                'formatId' => 'required',                    
+                'title' => 'required|max:50',                
+                'lengthTotal' => 'required|integer|between:1,500',                
+                'year' => 'required|integer|between:1800,2100',                                
+                'formatId' => 'required|integer|min:1|max:3',                                    
+                'rating' => 'sometimes|integer|between:1,5',                                    
             ]);                
 
             if ($validator->fails()) 
@@ -113,7 +116,7 @@ class MoviesAPIController extends Controller
                 Log::info('now create movies in MoviesAPIController createUserMovie - '); 
                 $movidId = DB::table('movies')->insertGetId(
                     ['title' => request('title'), 
-                    'length' => request('lengthHour') * 60 + request('lengthMinute'), 
+                    'lengthTotal' => request('lengthTotal'), 
                     'releaseYear' => request('year'),                     
                     'createdDate' => $timestamp, 
                     'createdBy' => $user->id,                     
@@ -185,7 +188,7 @@ class MoviesAPIController extends Controller
             if (empty($foundErrors)) 
             {
                 DB::commit();
-                $success['userMovie'] = json_encode(array('$movidId' => $movidId, 'title' => request('title'), 'lengthc' => request('length'), 'year' => request('year'), 'rating' => request('rating')));
+                $success['userMovie'] = json_encode(array('$movidId' => $movidId, 'title' => request('title'), 'lengthc' => request('lengthTotal'), 'year' => request('year'), 'rating' => request('rating')));
                 return response()->json(['success' => $success], $this->successStatus);
             }
             else
@@ -206,21 +209,30 @@ class MoviesAPIController extends Controller
     *
     * @return \Illuminate\Http\Response
     */
-    public function updateUserMovie(Request $request)
+    public function updateUserMovie(Request $request, $id)
     {
         //since we are using the auth::user id and the passed in movie id on the user_movie table, 
         //we should be protecting other user's data (if somone passes in a movie id that is not part of the user_movie PK pair)
         Log::info('in MoviesAPIController updateUserMovie... ');
+        Log::info('in MoviesAPIController updateUserMovie year = '.request('year'));
+        DB::enableQueryLog();    
         
-                    
         if(Auth::check())
         {
             Log::info('in MoviesAPIController updateUserMovie - Auth passed');                
+            Log::info('in movieId = '. $id);
             
+            Log::info(request()->all());
+               
                 $validator = Validator::make($request->all(), 
                 [
-                    'movieId' => 'required',                                        
-                    'formatId' => 'required',                                        
+                    //'movieId' => 'required|integer|min:1',
+                    
+                    'title' => 'sometimes|max:50',                
+                    'lengthTotal' => 'sometimes|integer|between:1,500',
+                    'year' => 'sometimes|integer|between:1800,2100',                               
+                    'formatId' => 'sometimes|integer|min:1|max:3', 
+                    'rating' => 'sometimes|integer|between:1,5',            
                 ]);                
 
             if ($validator->fails()) 
@@ -229,25 +241,34 @@ class MoviesAPIController extends Controller
                 return response()->json(['error'=>$validator->errors()], 500);            
             }
 
+            $rowsAffected = 0;
             DB::beginTransaction();
                             
                 $timestamp = date("Y-m-d H:i:s");
                 $user = Auth::user();
                 $foundErrors = array();
-
+                
+                Log::info('in userId = '.$user->id);
                 try 
                 {   
                     Log::info('now update movies in MoviesAPIController updateUserMovie - ');   
-                    
-                    DB::table('user_movies')                
-                        ->where('userId', '=', $user->id)                
-                        ->where('movieId','=', request('movieId'))
-                        ->update([  'formatId' => request('formatId'),                
-                                    'rating' => request('rating'),                                    
-                                    'modifiedDate' => $timestamp,
-                                    'modifiedBy' => $user->id
-                                ]);
 
+                    
+                    $updateParams = array(); 
+                    $request->has('formatId') ? $updateParams['formatId'] = request('formatId') : 1;
+                    $request->has('rating') ? $updateParams['rating'] = request('rating') : 1;
+                    $updateParams['modifiedDate'] = $timestamp;
+                    $updateParams['modifiedBy'] = $user->id;
+                   
+                    Log::info($updateParams);
+
+                    $rowsAffected = DB::table('user_movies')                
+                                    ->where('userId', '=', $user->id)                
+                                    ->where('movieId','=', $id)
+                                    ->update($updateParams);
+                        
+                    Log::info(DB::getQueryLog());
+                    Log::info('after update user_movies... rows affected = '.$rowsAffected);
                 } 
                 catch(ValidationException $e)
                 {  
@@ -264,20 +285,34 @@ class MoviesAPIController extends Controller
 
                 Log::info('done with user_movies in MoviesAPIController updateUserMovie ');
 
+                if($rowsAffected == 0 )
+                {
+                    $foundErrors[] = "Failed to update user_movies!";
+                }                
+                
                 if (empty($foundErrors)) 
                 {
                     Log::info('now update movies in MoviesAPIController updateUserMovie - ');
+
+                    $rowsAffected = 0;
                     try 
                     {
-                        DB::table('movies')
-                        ->where('id', request('movieId'))
-                        ->update([  'title' => request('title'),
-                                    'length' => request('lengthHour') * 60 + request('lengthMinute'),
-                                    'releaseYear' => request('year'),
-                                    'modifiedDate' => $timestamp,
-                                    'modifiedBy' => $user->id
-                                ]);
+
+                        $updateParams = array(); 
+                        $request->has('title') ? $updateParams['title'] = request('title') : 1;
+                        $request->has('lengthTotal') ? $updateParams['lengthTotal'] = request('lengthTotal') : 1;
+                        $request->has('year') ? $updateParams['releaseYear'] = request('year') : 1;
+                        $updateParams['modifiedDate'] = $timestamp;
+                        $updateParams['modifiedBy'] = $user->id;
+
+                        Log::info($updateParams);
+
+                        $rowsAffected = DB::table('movies')
+                                        ->where('id', $id)
+                                        ->update($updateParams);
                         
+                        Log::info(DB::getQueryLog());
+                        Log::info('after update movies... rows affected = '.$rowsAffected);
                     } catch(ValidationException $e)
                     {                            
                         DB::rollback();
@@ -293,10 +328,17 @@ class MoviesAPIController extends Controller
                 }
 
             Log::info('done with movies in MoviesAPIController updateUserMovie - ');
+
+            if($rowsAffected == 0 )
+            {
+                $foundErrors[] = "Failed to update movies!";
+                DB::rollback();
+            }      
+
             if (empty($foundErrors)) 
             {
                 DB::commit();
-                $success['userMovie'] = json_encode(array('$movidId' =>  request('movieId'), 'title' => request('title'), 'length' => request('length'), 'year' => request('year'), 'rating' => request('rating')));
+                $success['userMovie'] = json_encode(array('$movidId' =>  request('movieId'), 'title' => request('title'), 'lengthTotal' => request('lengthTotal'), 'year' => request('year'), 'rating' => request('rating')));
                 return response()->json(['success' => $success], $this->successStatus);
             }
             else
@@ -339,15 +381,18 @@ class MoviesAPIController extends Controller
             $user = Auth::user();
             $foundErrors = array();
 
+            $rowsAffected = 0;
+
             try 
-            {   
+            {                   
                 Log::info('now delete user_movies in MoviesAPIController deleteUserMovie - ');   
 
-                DB::table('user_movies')                
-                ->where('userId', '=', $user->id)                
-                ->where('movieId','=', $id)
-                ->delete();
+                $rowsAffected = DB::table('user_movies')                
+                                ->where('userId', '=', $user->id)                
+                                ->where('movieId','=', $id)
+                                ->delete();
 
+                Log::info('after delete user_movies... rows affected = '.$rowsAffected);                                
             } 
             catch(ValidationException $e)
             {  
@@ -364,19 +409,27 @@ class MoviesAPIController extends Controller
 
             Log::info('done with user_movies in MoviesAPIController deleteUserMovie ');
 
+            if($rowsAffected == 0 )
+            {
+                $foundErrors[] = "Failed to delete user_movies!";               
+            } 
+
             if (empty($foundErrors)) 
             {
+                $rowsAffected = 0;
                 Log::info('now delete movies in MoviesAPIController deleteUserMovie - ');
+
                 try 
                 {
-                    DB::table('movies')
-                    ->where('id', $id)
-                    ->delete();
+                    $rowsAffected = DB::table('movies')
+                                        ->where('id', $id)
+                                        ->delete();
                     
+                    Log::info('after delete movies... rows affected = '.$rowsAffected);
                 } 
                 catch(ValidationException $e)
                 {                            
-                    DB::rollback();
+                    $rowsAffected = DB::rollback();
                     $foundErrors[] =  $e->getErrors();  //get error to send back with response
                     Log::info('ValidationException in MoviesAPIController deleteUserMovie movies delete - '. $e->errors());
                 }
@@ -389,12 +442,19 @@ class MoviesAPIController extends Controller
             }
 
             Log::info('done with movies in MoviesAPIController deleteUserMovie - ');
+
+            if($rowsAffected == 0 )
+            {
+                $foundErrors[] = "Failed to delete movies!";
+                DB::rollback();
+            } 
+
             Log::info($foundErrors);
             if (empty($foundErrors)) 
             {
                 DB::commit();
                 Log::info('commit done');
-                //$success['userMovie'] = json_encode(array('$movidId' =>  request('movieId'), 'title' => request('title'), 'length' => request('length'), 'year' => request('year'), 'rating' => request('rating')));
+                $success['userMovie'] = json_encode(array('$movidId' =>  request('movieId'), 'title' => request('title'), 'lengthTotal' => request('lengthTotal'), 'year' => request('year'), 'rating' => request('rating')));
                 return response()->json(['success' => 'Success'], $this->successStatus);
             }
             else
@@ -431,7 +491,7 @@ class MoviesAPIController extends Controller
             
             ->select('formats.id', 'formats.name')
             ->where('formats.active', '>', 0)
-            ->get();;
+            ->get();
 
             
             return response()->json(['success' => $success], $this->successStatus);                

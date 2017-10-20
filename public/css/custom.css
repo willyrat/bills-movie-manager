@@ -1,0 +1,29 @@
+
+
+
+.welcomeImage
+{
+   width:90%; 
+}
+
+
+.navbar-brand > img 
+{
+    display: inline-block;
+    
+}
+
+.navbar-brand 
+{
+    padding-top: 0px;
+    padding-left: 15px;
+}
+
+
+@media only screen and (orientation: landscape)
+{
+    .flex-center 
+    {
+        padding-top: 150px;    
+    }
+}

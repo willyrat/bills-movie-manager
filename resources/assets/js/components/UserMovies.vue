@@ -114,7 +114,7 @@ th.active .arrow {
                             <th v-show=false>Id</th>
                             <th @click="getSortedUserMovies('title')" :class="{ active: sortKey == 'title' }">Title <span class="arrow" :class="sortOrders['title'] > 0 ? 'asc' : sortOrders['title'] < 0 ? 'desc' : 'none'"></span></th>
                             <th @click="getSortedUserMovies('name')" :class="{ active: sortKey == 'name' }" class="toggle-header2">Format<span class="arrow" :class="sortOrders['name'] > 0 ? 'asc' : sortOrders['name'] < 0 ? 'desc' : 'none'"></span></th>
-                            <th @click="getSortedUserMovies('length')" :class="{ active: sortKey == 'length' }"class="toggle-header">Length<span class="arrow" :class="sortOrders['length'] > 0 ? 'asc' : sortOrders['length'] < 0 ? 'desc' : 'none'"></span></th>
+                            <th @click="getSortedUserMovies('lengthTotal')" :class="{ active: sortKey == 'lengthTotal' }"class="toggle-header">Length<span class="arrow" :class="sortOrders['lengthTotal'] > 0 ? 'asc' : sortOrders['lengthTotal'] < 0 ? 'desc' : 'none'"></span></th>
                             <th @click="getSortedUserMovies('releaseYear')" :class="{ active: sortKey == 'releaseYear' }" class="toggle-header2">Year<span class="arrow" :class="sortOrders['releaseYear'] > 0 ? 'asc' : sortOrders['releaseYear'] < 0 ? 'desc' : 'none'"></span></th>
                             <th @click="getSortedUserMovies('rating')" :class="{ active: sortKey == 'rating' }" class="toggle-header">Rating<span class="arrow" :class="sortOrders['rating'] > 0 ? 'asc' : sortOrders['rating'] < 0 ? 'desc' : 'none'"></span></th>
                         </tr>
@@ -447,7 +447,7 @@ th.active .arrow {
                     errors: [],
                     title: '', 
                     formatId: '', 
-                    length: '',
+                    lengthTotal: '',
                     lengthHour: '',
                     lengthMinute: '',
                     year: '',
@@ -458,7 +458,7 @@ th.active .arrow {
                     errors: [],
                     title: '',
                     formatId: '', 
-                    length: '',
+                    lengthTotal: '',
                     lengthHour: '',
                     lengthMinute: '',
                     year: '',
@@ -520,7 +520,7 @@ th.active .arrow {
                 //  time, minutes, >0 and <500)   
                 var hour = 0;
                 var minute = 0;
-                if(this.createForm.lengthHour.length > 0)
+                if(this.createForm.lengthHour.toString().trim().length > 0)
                 {
                     if(isNaN(this.createForm.lengthHour) )
                     {
@@ -529,7 +529,7 @@ th.active .arrow {
                     hour = parseInt(this.createForm.lengthHour)
                 }
 
-                if(this.createForm.lengthMinute.length > 0)
+                if(this.createForm.lengthMinute.toString().trim().length > 0)
                 {
                     if(isNaN(this.createForm.lengthMinute) )
                     {
@@ -538,10 +538,10 @@ th.active .arrow {
                     minute = parseInt(this.createForm.lengthMinute)
                 }
 
-                this.createForm.length =  hour * 60 + minute;
+                this.createForm.lengthTotal =  hour * 60 + minute;
 
-                //Check to see if length is less than 1 or greater than 500 minutes
-                if( isNaN(this.createForm.length) || this.createForm.length < 1 ||  this.createForm.length > 500 )
+                //Check to see if lengthTotal is less than 1 or greater than 500 minutes
+                if( isNaN(this.createForm.lengthTotal) || this.createForm.lengthTotal < 1 ||  this.createForm.lengthTotal > 500 )
                 {
                     return true;
                 }               
@@ -553,7 +553,7 @@ th.active .arrow {
                 //  time, minutes, >0 and <500)   
                 var hour = 0;
                 var minute = 0;
-                if(this.editForm.lengthHour.length > 0)
+                if(this.editForm.lengthHour.toString().trim().length > 0)
                 {
                     if(isNaN(this.editForm.lengthHour) )
                     {
@@ -562,7 +562,7 @@ th.active .arrow {
                     hour = parseInt(this.editForm.lengthHour)
                 }
 
-                if(this.editForm.lengthMinute.length > 0)
+                if(this.editForm.lengthMinute.toString().trim().length > 0)
                 {
                     if(isNaN(this.editForm.lengthMinute) )
                     {
@@ -571,10 +571,10 @@ th.active .arrow {
                     minute = parseInt(this.editForm.lengthMinute)
                 }
 
-                this.editForm.length =  hour * 60 + minute;
+                this.editForm.lengthTotal =  hour * 60 + minute;
 
-                //Check to see if length is less than 1 or greater than 500 minutes
-                if( isNaN(this.editForm.length) || this.editForm.length < 1 ||  this.editForm.length > 500 )
+                //Check to see if lengthTotal is less than 1 or greater than 500 minutes
+                if( isNaN(this.editForm.lengthTotal) || this.editForm.lengthTotal < 1 ||  this.editForm.lengthTotal > 500 )
                 {
                     return true;
                 }               
@@ -666,10 +666,19 @@ th.active .arrow {
                                     {
                                         this.userMovies = response.data.success.userMovies;
 
+                                        
+
                                         if(this.userMovies[0] !== null)
                                         {
+                                            for(var i=0; i<this.userMovies.length; i++)
+                                            {
+                                                this.userMovies[i]['lengthHour'] = Math.floor(this.userMovies[i]["lengthTotal"]/60);
+                                                this.userMovies[i]['lengthMinute'] = this.userMovies[i]["lengthTotal"] % 60;
+                                            }
+
+                                            //only need to grab one set
                                             var temp = Object.keys(this.userMovies[0]);
-                                            for (var i=0; i<temp.length; i++) 
+                                            for (i=0; i<temp.length; i++) 
                                             {
                                                 this.sortOrders[temp[i]] = 0;
                                             }   
@@ -686,10 +695,16 @@ th.active .arrow {
                         .then(response => 
                         {
                             this.userMovies = response.data.success.userMovies;
-                            
+                           
                             if(this.userMovies[0] !== null)
                             {
-                                
+                                for(var i=0; i<this.userMovies.length; i++)
+                                {
+                                    this.userMovies[i]['lengthHour'] = Math.floor(this.userMovies[i]["lengthTotal"]/60);
+                                    this.userMovies[i]['lengthMinute'] = this.userMovies[i]["lengthTotal"] % 60;
+                                }
+
+                                //only need to grab one set
                                 //reset sortOrders array
                                 var temp = Object.keys(this.sortOrders);
                                 for (var i=0; i<temp.length; i++)                                
@@ -718,8 +733,8 @@ th.active .arrow {
              */
             store() 
             {
-                //this.createForm.length =  parseInt(this.createForm.lengthHour) * 60 +  parseInt(this.createForm.lengthMinute);
-
+                //this.createForm.lengthTotal =  parseInt(this.createForm.lengthHour) * 60 +  parseInt(this.createForm.lengthMinute);
+                this.createForm.year = parseInt(this.createForm.year);
                 if(this.validateCreateForm())
                 {
                     this.persistMovie(
@@ -743,7 +758,7 @@ th.active .arrow {
                 this.editForm.lengthMinute = userMovie.lengthMinute;
                 this.editForm.year = userMovie.releaseYear;
                 this.editForm.rating = userMovie.rating;
-                this.editForm.length = '';
+                this.editForm.lengthTotal = '';
 
                 $('#modal-edit-movie').modal('show');
             },
@@ -753,12 +768,13 @@ th.active .arrow {
              */
             update() 
             {
-                this.editForm.length = parseInt(this.editForm.lengthHour) * 60 + parseInt(this.editForm.lengthMinute);
-                
+                //this.editForm.lengthTotal = parseInt(this.editForm.lengthHour) * 60 + parseInt(this.editForm.lengthMinute);
+                this.editForm.year = parseInt(this.editForm.year);
+
                 if(this.validateEditForm())
                 {
                     this.persistMovie(
-                        'put', '/api/update-movie/' + this.editForm.movieId,
+                        'patch', '/api/update-movie/' + this.editForm.movieId,
                         this.editForm, '#modal-edit-movie'
                     );
                 }
@@ -784,7 +800,7 @@ th.active .arrow {
                         form.year = '';
                         form.rating = '';
                         form.errors = [];
-                        form.length = '';
+                        form.lengthTotal = '';
 
                         $(modal).modal('hide');
                     })

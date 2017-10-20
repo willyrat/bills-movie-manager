@@ -49,7 +49,7 @@ class MovieController extends Controller
         $userMovies = DB::table('user_movies')
         ->join('users', 'users.id', '=', 'user_movies.userId')
         ->join('movies', 'movies.id', '=', 'user_movies.movieId')
-        ->select('users.id', 'users.firstName', 'users.lastName','movies.id', 'movies.title', 'movies.length', 'movies.releaseYear', 'user_movies.rating')
+        ->select('users.id', 'users.firstName', 'users.lastName','movies.id', 'movies.title', 'movies.lengthTotal', 'movies.releaseYear', 'user_movies.rating')
         ->where('users.id', '=', $user->id)
         ->get();
 
@@ -58,7 +58,7 @@ log::info('user id = '.$user->id);
 log::info('sql = '. DB::table('user_movies')
 ->join('users', 'users.id', '=', 'user_movies.userId')
 ->join('movies', 'movies.id', '=', 'user_movies.movieId')
-->select('users.id', 'users.firstName', 'users.lastName','movies.id', 'movies.title', 'movies.length', 'movies.releaseYear', 'user_movies.rating')
+->select('users.id', 'users.firstName', 'users.lastName','movies.id', 'movies.title', 'movies.lengthTotal', 'movies.releaseYear', 'user_movies.rating')
 ->where('users.id', '=', $user->id)
 ->toSql());
 
